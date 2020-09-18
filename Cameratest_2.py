@@ -1,4 +1,4 @@
-from picameraimport PiCamera
+from picamera import PiCamera
 from picamera.arrayimport PiRGBArray
 
 camera = PiCamera()
