@@ -1,5 +1,5 @@
 from picamera import PiCamera
-from picamera.arrayimport PiRGBArray
+from picamera.array import PiRGBArray
 
 camera = PiCamera()
 camera.resolution= (640,480)
