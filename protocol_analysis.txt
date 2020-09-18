@@ -1,7 +1,7 @@
 PC refers to Algorithm(one of the ways to prevent plagiarism)
 
 android to 
- - control robot + calibrate sensor (arduino)
+ - control robot manually (with arrows) + calibrate sensor (arduino)
  - start exploration/fastest path (PC and ard)
 
 arduino to
