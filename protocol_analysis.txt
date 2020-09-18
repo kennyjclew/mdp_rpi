@@ -1,0 +1,24 @@
+and to 
+ - control robot + calibrate sensor (ard)
+ - start exploration/fastest path (algo and ard)
+
+ard to
+ - sensor distances (algo) 
+	- ard will send certain messages if detect wall? rpi will not change. algo needs to handle
+	- will tell algo if can move forward (forward_error). await algo response on if need turn/move forward 
+
+
+algo to
+ - tells android arduino's next move (to and)
+ - split messages by \n
+	- passes entire map string (1 message) to android 
+ - rpi (take pic, exploration complete - to turn off camera?) 
+ - maintain current coord????
+
+rpi to algo
+ - done taking pic/img rec
+
+
+maybe 3 separate write functions
+
+rpitoandroid for testing (kiv)
