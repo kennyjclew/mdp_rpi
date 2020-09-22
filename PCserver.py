@@ -57,13 +57,16 @@ class PCserver:
             print("server socket closed")
 
     #receive data from client
-    def receive(self):
+    def read(self):
         data = self.conn.recv(1024).decode('utf-8')
         print("server received data " + data)
-        return data
+        if len(data) > 0:
+            return data
+        else:
+            return None
 
     #send data to client
-    def send(self, data):
+    def write(self, data):
         self.conn.send(data.encode('utf-8'))
         print("server sending data " + data)
 
