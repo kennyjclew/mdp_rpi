@@ -1,3 +1,6 @@
+HOST_IP = '192.168.21.21'
+PORT = 65431
+
 MSG_SEPARATOR = '|'.encode()
 NEWLINE = '\n'.encode()
 
@@ -18,18 +21,20 @@ class AndroidToArduino:
     CALIBRATE_SENSOR = 'C|'.encode()
 
     #for rpi to check if msg is valid. 
-    ALL_MESSAGES = [
-        MOVE_FORWARD,
-        MOVE_BACK,
-        TURN_LEFT,
-        TURN_RIGHT,
-        CALIBRATE_SENSOR,
-    ]
+    # ANDTOARD_MESSAGES = [
+    #     MOVE_FORWARD,
+    #     MOVE_BACK,
+    #     TURN_LEFT,
+    #     TURN_RIGHT,
+    #     CALIBRATE_SENSOR,
+    # ]
 
 #to send to both arduino and pc
 class AndroidToRPi:
     START_EXPLORATION = 'E|'.encode()
     START_FASTEST_PATH = 'F|'.encode()
+
+    ANDTORPI_MESSAGES = [START_EXPLORATION, START_FASTEST_PATH]
 
 # class AndroidToPC:
 #     UPDATE_ARENA = 'UA|'.encode()
