@@ -38,12 +38,12 @@ class Multithreading:
 
         #not sure if need disconnect_all for all the modules? 
         #if one never connect, then have to disconnect all? consider during testing
-        self.r_arduino_thread = multiprocessing.Process(target=arduino_continuous_read, args=(self.msgqueue,))
-        self.r_android_thread = multiprocessing.Process(target=android_continuous_read, args=(self.msgqueue,))
-        self.r_pc_thread = multiprocessing.Process(target=pc_continuous_read, args=(self.msgqueue,))
+        self.r_arduino_thread = multiprocessing.Process(target=self.arduino_continuous_read, args=(self.msgqueue,))
+        self.r_android_thread = multiprocessing.Process(target=self.android_continuous_read, args=(self.msgqueue,))
+        self.r_pc_thread = multiprocessing.Process(target=self.pc_continuous_read, args=(self.msgqueue,))
             #KIV: not sure if need args. check back later
 
-        self.w_thread = multiprocessing.Process(target=write_to_device, args=(self.msgqueue,))
+        self.w_thread = multiprocessing.Process(target=self.write_to_device, args=(self.msgqueue,))
 
         self.allthreads = [self.r_arduino_thread, self.r_android_thread, self.r_pc_thread, self.w_thread]
 
