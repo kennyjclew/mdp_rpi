@@ -120,9 +120,9 @@ class Multithreading:
             elif msg == PCToRPi.EXPLORATION_DONE:
                 #KIV: RPI DO SOMETHING. display all images recognised?
                 print("pc tells rpi that exploration done")
-
             else:
-                print("received invalid message from PC")
+                msgqueue.put([ARDUINO_HEADER, msg])
+                print("msg from PC forwarding to arduino")
                 
 
     def write_to_device(self, msgqueue):
