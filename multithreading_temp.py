@@ -56,12 +56,12 @@ class Multithreading:
     def connect_all_devices(self):
         try:
             self.arduino.connect()
-            self.android.connect()
+            #self.android.connect()
             self.pc.connect()
             print("all devices connected!")
 
         except Exception as error:
-            print("error when connecting devices: " + error)
+            print("error when connecting devices: " + str(error))
 
 
     def start_all_threads(self):
