@@ -79,7 +79,7 @@ class Multithreading:
         
 
 
-    def arduino_continuous_read(self):
+    def arduino_continuous_read(self, msgqueue):
         while True:
             msg = self.arduino.read()
             #arduino only sends msges to PC. directly forward msg.
@@ -87,25 +87,25 @@ class Multithreading:
             if msg is None:
                 continue
             
-            self.msgqueue.put([PC_HEADER, msg]) 
+            msgqueue.put([PC_HEADER, msg]) 
             #KIV: ??nowait: raise Full exception immediately??
 
-    def android_continuous_read(self):
+    def android_continuous_read(self, msgqueue):
         while True:
             msg = self.android.read()
 
             if msg is None:
                 continue
             elif msg in AndroidToRPi.ANDTORPI_MESSAGES: #send to both arduino and pc
-                self.msgqueue.put([PC_HEADER, msg])
+                msgqueue.put([PC_HEADER, msg])
             else:
                 print("received invalid message from android")
             
             #need to send to arduino no matter what
-            self.msgqueue.put([ARDUINO_HEADER, msg])
+            msgqueue.put([ARDUINO_HEADER, msg])
 
 
-    def pc_continuous_read(self):
+    def pc_continuous_read(self, msgqueue):
         while True:
             msg = self.pc.read()
             #pc either sends to android (only mapstring) or rpi
@@ -113,7 +113,7 @@ class Multithreading:
             if msg is None:
                 continue
             elif msg[0] == PCToAndroid.MAP_STRING: #PC must send MAPSTRING with MAP_STRING as a header
-                self.msgqueue.put([ANDROID_HEADER, msg])
+                msgqueue.put([ANDROID_HEADER, msg])
             elif msg == PCToRPi.TAKE_PICTURE:
                 #KIV: RPI TAKE PICTURE
                 print("pc tells rpi to take picture")
@@ -125,10 +125,10 @@ class Multithreading:
                 print("received invalid message from PC")
                 
 
-    def write_to_device(self):
+    def write_to_device(self, msgqueue):
         while True:
-            if not self.msgqueue.empty():
-                msg = self.msgqueue.get()
+            if not msgqueue.empty():
+                msg = msgqueue.get()
 
                 if msg[0] == ARDUINO_HEADER:
                     self.arduino.write(msg[1])
