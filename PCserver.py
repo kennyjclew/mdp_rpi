@@ -67,7 +67,7 @@ class PCserver:
 
     #send data to client
     def write(self, data):
-        self.conn.send(data.encode('utf-8'))
+        self.conn.send((data+'\n').encode('utf-8'))
         print("server sending data " + data)
 
 
