@@ -82,6 +82,7 @@ class Multithreading:
     def arduino_continuous_read(self, msgqueue):
         while True:
             msg = self.arduino.read()
+            print('hello'+msg)
             #arduino only sends msges to PC. directly forward msg.
 
             if msg is None:
@@ -120,9 +121,10 @@ class Multithreading:
             elif msg == PCToRPi.EXPLORATION_DONE:
                 #KIV: RPI DO SOMETHING. display all images recognised?
                 print("pc tells rpi that exploration done")
+
             else:
                 msgqueue.put([ARDUINO_HEADER, msg])
-                print("msg from PC forwarding to arduino")
+                print("message received forwarding to arduino")
                 
 
     def write_to_device(self, msgqueue):
