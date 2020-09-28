@@ -82,6 +82,7 @@ class Multithreading:
     def arduino_continuous_read(self, msgqueue):
         while True:
             msg = self.arduino.read()
+            print('hello'+msg)
             #arduino only sends msges to PC. directly forward msg.
 
             if msg is None:
