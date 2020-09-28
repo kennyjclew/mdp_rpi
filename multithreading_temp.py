@@ -9,7 +9,6 @@
 
 
 import multiprocessing
-from queue import *
 
 from communications import *
 from Arduino_rachael import Arduino
@@ -81,7 +80,6 @@ class Multithreading:
 
 
     def arduino_continuous_read(self, msgqueue):
-        self.print_queue_now()
         while True:
             msg = self.arduino.read()
             print('hello'+msg)
@@ -91,7 +89,6 @@ class Multithreading:
                 continue
             
             msgqueue.put([PC_HEADER, msg]) 
-        self.print_queue_now()
             #KIV: ??nowait: raise Full exception immediately??
 
     def android_continuous_read(self, msgqueue):
@@ -110,7 +107,6 @@ class Multithreading:
 
 
     def pc_continuous_read(self, msgqueue):
-        self.print_queue_now()
         while True:
             msg = self.pc.read()
             #pc either sends to android (only mapstring) or rpi
@@ -130,7 +126,6 @@ class Multithreading:
                     msgqueue.put([ARDUINO_HEADER, msg])
                     self.print_queue_now()
                     print("msg from PC forwarding to arduino")
-        self.print_queue_now()
                 
 
     def write_to_device(self, msgqueue):
@@ -147,17 +142,6 @@ class Multithreading:
                     print("help me PC")
                     self.pc.write(msg[1])
 
-    def print_queue_now(self):
-        if(self.msgqueue.empty() == True):
-            print("queue is empty")
-            return False
-        else:
-            result = []
-            for i in iter(self.msgqueue.get, 'STOP'):
-                print("help me")
-                result.append(i)
-            time.sleep(.1)
-            print(result)
 
                 
 
