@@ -9,7 +9,6 @@
 
 
 import multiprocessing
-from queue import *
 
 from communications import *
 from Arduino_rachael import Arduino
@@ -81,7 +80,6 @@ class Multithreading:
 
 
     def arduino_continuous_read(self, msgqueue):
-        self.print_queue_now()
         while True:
             msg = self.arduino.read()
             print('hello'+msg)
@@ -91,7 +89,6 @@ class Multithreading:
                 continue
             
             msgqueue.put([PC_HEADER, msg]) 
-        self.print_queue_now()
             #KIV: ??nowait: raise Full exception immediately??
 
     def android_continuous_read(self, msgqueue):
@@ -110,7 +107,6 @@ class Multithreading:
 
 
     def pc_continuous_read(self, msgqueue):
-        self.print_queue_now()
         while True:
             msg = self.pc.read()
             #pc either sends to android (only mapstring) or rpi
@@ -128,32 +124,24 @@ class Multithreading:
                     print("pc tells rpi that exploration done")
                 else:
                     msgqueue.put([ARDUINO_HEADER, msg])
+                    self.print_queue_now()
                     print("msg from PC forwarding to arduino")
-        self.print_queue_now()
                 
 
     def write_to_device(self, msgqueue):
         while True:
             if not msgqueue.empty():
                 msg = msgqueue.get()
-
+                print(msg)
                 if msg[0] == ARDUINO_HEADER:
+                    print("help me arduino")
                     self.arduino.write(msg[1])
                 elif msg[0] == ANDROID_HEADER:
                     self.android.write(msg[1])
                 else: 
+                    print("help me PC")
                     self.pc.write(msg[1])
 
-    def print_queue_now(self):
-        if(self.msgqueue.empty() == True):
-            print("queue is empty")
-            return false
-        else:
-            result = []
-            for i in iter(self.msgqueue.get, 'STOP'):
-                result.append(i)
-            time.sleep(.1)
-            print(result)
 
                 
 
