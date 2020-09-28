@@ -109,20 +109,21 @@ class Multithreading:
         while True:
             msg = self.pc.read()
             #pc either sends to android (only mapstring) or rpi
-
-            if msg is None:
-                continue
-            elif msg[0] == PCToAndroid.MAP_STRING: #PC must send MAPSTRING with MAP_STRING as a header
-                msgqueue.put([ANDROID_HEADER, msg])
-            elif msg == PCToRPi.TAKE_PICTURE:
-                #KIV: RPI TAKE PICTURE
-                print("pc tells rpi to take picture")
-            elif msg == PCToRPi.EXPLORATION_DONE:
-                #KIV: RPI DO SOMETHING. display all images recognised?
-                print("pc tells rpi that exploration done")
-            else:
-                msgqueue.put([ARDUINO_HEADER, msg])
-                print("msg from PC forwarding to arduino")
+            msg_list = msg.splitlines()
+            for msg in msg_list:
+                if msg is None:
+                    continue
+                elif msg[0] == PCToAndroid.MAP_STRING: #PC must send MAPSTRING with MAP_STRING as a header
+                    msgqueue.put([ANDROID_HEADER, msg])
+                elif msg == PCToRPi.TAKE_PICTURE:
+                    #KIV: RPI TAKE PICTURE
+                    print("pc tells rpi to take picture")
+                elif msg == PCToRPi.EXPLORATION_DONE:
+                    #KIV: RPI DO SOMETHING. display all images recognised?
+                    print("pc tells rpi that exploration done")
+                else:
+                    msgqueue.put([ARDUINO_HEADER, msg])
+                    print("msg from PC forwarding to arduino")
                 
 
     def write_to_device(self, msgqueue):
