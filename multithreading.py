@@ -105,7 +105,7 @@ class Multithreading:
 
     def pc_continuous_read(self, msgqueue):
         while True:
-           msg = self.pc.read()
+            msg = self.pc.read()
             #pc either sends to android (only mapstring) or rpi
             msg_list = msg.splitlines()
             for msg in msg_list:
