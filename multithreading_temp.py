@@ -9,7 +9,7 @@
 
 
 import multiprocessing
-import Queue
+from queue import *
 
 from communications import *
 from Arduino_rachael import Arduino
