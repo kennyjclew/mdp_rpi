@@ -80,6 +80,7 @@ class Multithreading:
 
 
     def arduino_continuous_read(self, msgqueue):
+        self.print_queue_now()
         while True:
             msg = self.arduino.read()
             print('hello'+msg)
@@ -89,6 +90,7 @@ class Multithreading:
                 continue
             
             msgqueue.put([PC_HEADER, msg]) 
+        self.print_queue_now()
             #KIV: ??nowait: raise Full exception immediately??
 
     def android_continuous_read(self, msgqueue):
@@ -107,6 +109,7 @@ class Multithreading:
 
 
     def pc_continuous_read(self, msgqueue):
+        self.print_queue_now()
         while True:
             msg = self.pc.read()
             #pc either sends to android (only mapstring) or rpi
@@ -125,6 +128,7 @@ class Multithreading:
                 else:
                     msgqueue.put([ARDUINO_HEADER, msg])
                     print("msg from PC forwarding to arduino")
+        self.print_queue_now()
                 
 
     def write_to_device(self, msgqueue):
@@ -139,7 +143,7 @@ class Multithreading:
                 else: 
                     self.pc.write(msg[1])
 
-    def print_queue_now():
+    def print_queue_now(self):
         result = []
 
         for i in iter(self.msgqueue.get, 'STOP'):
