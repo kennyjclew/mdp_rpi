@@ -41,11 +41,27 @@ class Arduino:
 
     def read(self):
         try:
-            message = self.connection.readline().strip()
-            print(message)
-
+            print("HELLO")
+            counter = 0
+            message_list = []
+            while (counter < 5):
+                message = self.connection.read().decode("utf-8")
+                if(message == "|"):
+                    counter += 1
+                message_list.append(message)
+            message = self.connection.read().decode("utf-8")
+            message_list.append(message)
+            if( message == "-"):
+                message = self.connection.read().decode("utf-8")
+                message_list.append(message)
+            
+            message = ''.join(message_list)
+            print(message_list)
             if len(message)>0:
-                return message
+               print("it works " + message)
+               return message
+            else:
+               print("nothing read")
             return None
         except Exception as error:
             print('Read from Arduino FAILED. Error Message: ' + error)

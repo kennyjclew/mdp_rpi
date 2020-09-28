@@ -128,6 +128,7 @@ class Multithreading:
                     print("pc tells rpi that exploration done")
                 else:
                     msgqueue.put([ARDUINO_HEADER, msg])
+                    self.print_queue_now()
                     print("msg from PC forwarding to arduino")
         self.print_queue_now()
                 
@@ -136,21 +137,24 @@ class Multithreading:
         while True:
             if not msgqueue.empty():
                 msg = msgqueue.get()
-
+                print(msg)
                 if msg[0] == ARDUINO_HEADER:
+                    print("help me arduino")
                     self.arduino.write(msg[1])
                 elif msg[0] == ANDROID_HEADER:
                     self.android.write(msg[1])
                 else: 
+                    print("help me PC")
                     self.pc.write(msg[1])
 
     def print_queue_now(self):
         if(self.msgqueue.empty() == True):
             print("queue is empty")
-            return false
+            return False
         else:
             result = []
             for i in iter(self.msgqueue.get, 'STOP'):
+                print("help me")
                 result.append(i)
             time.sleep(.1)
             print(result)

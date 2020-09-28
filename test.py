@@ -6,7 +6,12 @@ arduino = Arduino()
 arduino.connect()
 apple = 'A|'
 arduino.write(apple)
+arduino.write('W|')
+arduino.write("R|")
+
 arduino.read()
+
+arduino.write("W|S|")
 
 #android = Android()
 #android.connect()
