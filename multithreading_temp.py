@@ -137,5 +137,14 @@ class Multithreading:
                     self.android.write(msg[1])
                 else: 
                     self.pc.write(msg[1])
+
+    def print_queue_now():
+        result = []
+
+        for i in iter(self.msgqueue.get, 'STOP'):
+            result.append(i)
+        time.sleep(.1)
+        print(result)
+
                 
 
