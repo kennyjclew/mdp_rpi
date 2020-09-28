@@ -9,6 +9,7 @@
 
 
 import multiprocessing
+import Queue
 
 from communications import *
 from Arduino_rachael import Arduino
@@ -144,12 +145,15 @@ class Multithreading:
                     self.pc.write(msg[1])
 
     def print_queue_now(self):
-        result = []
-
-        for i in iter(self.msgqueue.get, 'STOP'):
-            result.append(i)
-        time.sleep(.1)
-        print(result)
+        if(self.msgqueue.empty() == True):
+            print("queue is empty")
+            return false
+        else:
+            result = []
+            for i in iter(self.msgqueue.get, 'STOP'):
+                result.append(i)
+            time.sleep(.1)
+            print(result)
 
                 
 
