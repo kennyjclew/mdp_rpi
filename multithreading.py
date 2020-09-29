@@ -121,7 +121,6 @@ class Multithreading:
                     print("pc tells rpi that exploration done")
                 else:
                     msgqueue.put([ARDUINO_HEADER, msg])
-                    self.print_queue_now()
                     print("msg from PC forwarding to arduino")
                 
 

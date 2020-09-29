@@ -12,7 +12,7 @@ via the server/client.
 LOCALE = 'UTF-8'
 ANDROID_SOCKET_BUFFER_SIZE = 512
 UUID = '443559ba-b80f-4fb6-99d9-ddbcd6138fbd'
-RFCOMM_CHANNEL = 9
+RFCOMM_CHANNEL = 2
 class Android:
     def __init__(self):
         self.server_sock = None
@@ -89,7 +89,7 @@ class Android:
         
     def read(self):
         try:
-            message = self.client_sock.recv(ANDROID_SOCKET_BUFFER_SIZE).strip()
+            message = self.client_sock.recv(ANDROID_SOCKET_BUFFER_SIZE).strip().decode("utf-8")
             print('From android:')
             print(message)
             
@@ -109,7 +109,7 @@ class Android:
         try:
             print('To Android:')
             print(message)
-            self.client_sock.send(message)
+            self.client_sock.send(message.encode("utf-8"))
 
         except Exception as error:	
             print('Android write failed: ' + str(error))

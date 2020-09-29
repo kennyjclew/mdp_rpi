@@ -31,7 +31,7 @@ class AndroidToArduino:
 
 #to send to both arduino and pc
 class AndroidToRPi:
-    START_EXPLORATION = 'E|'.encode()
+    START_EXPLORATION = 'E|'
     START_FASTEST_PATH = 'F|'.encode()
 
     ANDTORPI_MESSAGES = [START_EXPLORATION, START_FASTEST_PATH]
