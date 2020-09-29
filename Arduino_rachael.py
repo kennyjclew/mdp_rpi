@@ -42,7 +42,9 @@ class Arduino:
     def read(self):
         try:
             print("HELLO")
-            counter = 0
+            message = self.connection.readline().strip().decode()
+            print(message)
+            '''counter = 0
             message_list = []
             while (counter < 5):
                 message = self.connection.read().decode("utf-8")
@@ -55,8 +57,7 @@ class Arduino:
                 message = self.connection.read().decode("utf-8")
                 message_list.append(message)
             
-            message = ''.join(message_list)
-            print(message_list)
+            message = ''.join(message_list)'''
             if len(message)>0:
                print("it works " + message)
                return message
