@@ -1,4 +1,4 @@
-import cv2
+#import cv2
 import imagezmq
 import time
 from picamera import PiCamera
@@ -7,11 +7,11 @@ from picamera.array import PiRGBArray
 
 class TestImageZMQ():
     """docstring for ClassName"""
-    def __init__(self, arg):
+    def __init__(self):
         self.image_process = None
         # if image_processing_server_url is not None:
         self.image_process = Process(target=self._process_pic)
-
+        self.manager = Manager()
         # pictures taken using the PiCamera are placed in this queue
         self.image_queue = self.manager.Queue()
 
@@ -21,21 +21,23 @@ class TestImageZMQ():
 
     def _take_pic(self):
         try:
-            start_time = datetime.now()
+           # start_time = datetime.now()
 
             # initialize the camera and grab a reference to the raw camera capture
-            camera = PiCamera(resolution=(IMAGE_WIDTH, IMAGE_HEIGHT))  # '1920x1080'
+            camera = PiCamera(resolution=(1920,1080))  # '1920x1080'
+            camera.hflip = True 
             rawCapture = PiRGBArray(camera)
             
             # allow the camera to warmup
             time.sleep(0.1)
             
             # grab an image from the camera
-            camera.capture(rawCapture, format=IMAGE_FORMAT)
+            camera.capture(rawCapture, format='bgr')
             image = rawCapture.array
+            print("image taken")
             camera.close()
 
-            print('Time taken to take picture: ' + str(datetime.now() - start_time) + 'seconds')
+           # print('Time taken to take picture: ' + str(datetime.now() - start_time) + 'seconds')
             
             # to gather training images
             # os.system("raspistill -o images/test"+
@@ -51,11 +53,12 @@ class TestImageZMQ():
     def _process_pic(self, image):
         # initialize the ImageSender object with the socket address of the server
         image_sender = imagezmq.ImageSender(connect_to="tcp://192.168.18.11:5555")
+        print("connected")
         image_id_list = []
         while True:
             try:
-                if not self.image_queue.empty():
-                    start_time = datetime.now()
+                if 1==1:
+                   # start_time = datetime.now()
                     
                     # image_message =  self.image_queue.get_nowait()
                     # format: 'x,y|x,y|x,y'
@@ -98,8 +101,8 @@ class TestImageZMQ():
                                     id_string_to_android + NEWLINE
                                 )
 
-                    print('Time taken to process image: ' + \
-                        str(datetime.now() - start_time) + ' seconds')
+                   # print('Time taken to process image: ' + \
+                    #    str(datetime.now() - start_time) + ' seconds')
 
             except Exception as error:
                 print('Image processing failed: ' + str(error))
@@ -107,6 +110,7 @@ class TestImageZMQ():
 
 a = TestImageZMQ()
 b = a._take_pic()
+print(b)
 a._process_pic(b)
 
 print("ended")
