@@ -48,6 +48,8 @@ class Multithreading:
         self.allthreads = [self.r_arduino_thread, self.r_android_thread, self.r_pc_thread, self.w_thread]
 
         self.start_all_threads()
+
+        self.checkconnections()
         
 
 
@@ -76,6 +78,39 @@ class Multithreading:
             device.disconnect() #KIV: not sure if need to disconnect_all?
         
 
+    def checkconnections(self):
+        while True:
+            #assumes that process dies when target dies?????
+            if not self.r_arduino_thread.is_alive():
+                print("restarting connection with arduino")
+                self.arduino.disconnect()
+                try:
+                    self.arduino.connect()
+                except Exception as error:
+                    continue
+                self.r_arduino_thread = multiprocessing.Process(target=self.arduino_continuous_read, args=(self.msgqueue,))
+                self.r_arduino_thread.start()
+            elif not self.r_android_thread.is_alive():
+                print("restarting connection with android")
+                self.android.disconnect()
+                try:
+                    self.android.connect()
+                except Exception as error:
+                    continue
+                self.r_android_thread = multiprocessing.Process(target=self.android_continuous_read, args=(self.msgqueue,))
+                self.r_android_thread.start()
+            elif not self.r_pc_thread.is_alive():
+                print("restarting connection with pc")
+                self.pc.disconnect()
+                try:
+                    self.pc.connect()
+                except Exception as error:
+                    continue
+                self.r_pc_thread = multiprocessing.Process(target=self.pc_continuous_read, args=(self.msgqueue,))
+                self.r_pc_thread.start()
+            
+        #not sure why they reconnected the write threads also? kiv if need to do.
+
 
     def arduino_continuous_read(self, msgqueue):
         while True:
@@ -97,7 +132,7 @@ class Multithreading:
             elif msg in AndroidToRPi.ANDTORPI_MESSAGES: #send to both arduino and pc
                 msgqueue.put([PC_HEADER, msg])
             else:
-                print("received invalid message from android")
+                print("message from android to be forwarded to only arduino")
             
             #need to send to arduino no matter what
             msgqueue.put([ARDUINO_HEADER, msg])
