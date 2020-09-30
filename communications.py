@@ -18,7 +18,7 @@ class AndroidToArduino:
     MOVE_BACK = 'S|'.encode()
     TURN_LEFT = 'A|'.encode()
     TURN_RIGHT = 'D|'.encode()
-    CALIBRATE_SENSOR = 'C|'.encode()
+    CALIBRATE_SENSOR = 'C|'
 
     #for rpi to check if msg is valid. 
     # ANDTOARD_MESSAGES = [
