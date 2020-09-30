@@ -1,23 +1,23 @@
 HOST_IP = '192.168.21.21'
 PORT = 65431
 
-MSG_SEPARATOR = '|'.encode()
-NEWLINE = '\n'.encode()
+MSG_SEPARATOR = '|'
+NEWLINE = '\n'
 
-ANDROID_HEADER = 'ANDROID'.encode()
-ARDUINO_HEADER = 'ARDUINO'.encode()
-PC_HEADER = 'PC'.encode()
+ANDROID_HEADER = 'ANDROID'
+ARDUINO_HEADER = 'ARDUINO'
+PC_HEADER = 'PC'
 
 class RobotStatus:
-    IDLE = 'idle'.encode()
-    EXPLORING = 'exploring'.encode()
-    FASTEST_PATH = 'fastestpath'.encode()
+    IDLE = 'idle'
+    EXPLORING = 'exploring'
+    FASTEST_PATH = 'fastestpath'
 
 class AndroidToArduino:
-    MOVE_FORWARD = 'W|'.encode()
-    MOVE_BACK = 'S|'.encode()
-    TURN_LEFT = 'A|'.encode()
-    TURN_RIGHT = 'D|'.encode()
+    MOVE_FORWARD = 'W|'
+    MOVE_BACK = 'S|'
+    TURN_LEFT = 'A|'
+    TURN_RIGHT = 'D|'
     CALIBRATE_SENSOR = 'C|'
 
     #for rpi to check if msg is valid. 
@@ -32,7 +32,7 @@ class AndroidToArduino:
 #to send to both arduino and pc
 class AndroidToRPi:
     START_EXPLORATION = 'E|'
-    START_FASTEST_PATH = 'F|'.encode()
+    START_FASTEST_PATH = 'F|'
 
     ANDTORPI_MESSAGES = [START_EXPLORATION, START_FASTEST_PATH]
 
@@ -44,7 +44,7 @@ class AndroidToRPi:
 class PCToAndroid:
     #pc passes mapstring immediately after passing 'M'
         #e.g. pc passes 'M00101...'
-    MAP_STRING = 'M'.encode()
+    MAP_STRING = 'M'
 
     # MOVE_FORWARD = 'W'.encode()[0]
     # TURN_LEFT = 'A'.encode()[0]
@@ -55,8 +55,8 @@ class PCToAndroid:
     # ALIGN_FRONT = 'V'.encode()[0]
 
 class PCToRPi:
-    TAKE_PICTURE = 'TP'.encode()
-    EXPLORATION_DONE = 'ED'.encode()
+    TAKE_PICTURE = 'TP'
+    EXPLORATION_DONE = 'ED'
 
 
 # class RPiToAndroid:
@@ -78,5 +78,5 @@ class PCToRPi:
 
 
 class RPiToPC:
-    PICTURE_TAKEN = 'PT'.encode()
-    DONE_IMG_REC = 'I'.encode()
+    PICTURE_TAKEN = 'PT'
+    DONE_IMG_REC = 'I'
