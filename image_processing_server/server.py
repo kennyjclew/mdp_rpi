@@ -14,6 +14,7 @@ import numpy as np
 from config import *
 from image_receiver import custom_imagezmq as imagezmq
 import time
+import imgrecognTest
 # from utils import label_map_util
 # from utils import visualization_utils as vis_util
 
@@ -132,10 +133,10 @@ class ImageProcessingServer:
             # raw_image_path = os.path.join(self.raw_image_dir_path, raw_image_name)
             
         #     # save raw image
-            save_success = cv2.imwrite("/test.jpg", frame)
+            save_success = cv2.imwrite("C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/test.jpg", frame)
             print('save', "test.jpg", 'successful?', save_success)
 
-            return True
+            imgrecognTest.runAnalysis("C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/test.jpg")
             
         #     frame = cv2.imread(raw_image_path)
             
@@ -194,7 +195,7 @@ class ImageProcessingServer:
         #     save_success = cv2.imwrite(processed_image_path, frame_rgb)
         #     # print('save', processed_image_name, 'successful?', save_success)
 
-        #     self.image_hub.send_reply(return_string)
+            self.image_hub.send_reply("return_string")
         #     # send_reply disconnects the connection
         #     print('Sent reply and disconnected at time: ' + str(datetime.now()) + '\n')
 
