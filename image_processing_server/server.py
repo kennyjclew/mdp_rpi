@@ -13,6 +13,7 @@ import numpy as np
 
 from config import *
 from image_receiver import custom_imagezmq as imagezmq
+import time
 # from utils import label_map_util
 # from utils import visualization_utils as vis_util
 
@@ -107,8 +108,10 @@ class ImageProcessingServer:
             # grab the frame dimensions and construct a blob
             print(frame)
             frame = imutils.resize(frame, width=IMAGE_WIDTH)
+            # cv2.imshow("",frame)
+            # time.sleep(30)
             print(frame)
-            return True
+            # return True
 
         #     if self._is_stopping_frame(frame):
         #         restart = self._show_all_images()
@@ -125,12 +128,14 @@ class ImageProcessingServer:
         #     frame_expanded = np.expand_dims(frame, axis=0)
             
         #     # form image file path for saving
-        #     raw_image_name = RAW_IMAGE_PREFIX + str(len(self.frame_list)) + IMAGE_ENCODING
-        #     raw_image_path = os.path.join(self.raw_image_dir_path, raw_image_name)
+            # raw_image_name = RAW_IMAGE_PREFIX + str(len(self.frame_list)) + IMAGE_ENCODING
+            # raw_image_path = os.path.join(self.raw_image_dir_path, raw_image_name)
             
         #     # save raw image
-        #     save_success = cv2.imwrite(raw_image_path, frame)
-        #     # print('save', raw_image_name, 'successful?', save_success)
+            save_success = cv2.imwrite("/test.jpg", frame)
+            print('save', "test.jpg", 'successful?', save_success)
+
+            return True
             
         #     frame = cv2.imread(raw_image_path)
             
