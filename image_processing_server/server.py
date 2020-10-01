@@ -134,9 +134,9 @@ class ImageProcessingServer:
             
         #     # save raw image
             save_success = cv2.imwrite("C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/test.jpg", frame)
-            print('save', "test.jpg", 'successful?', save_success)
+            print('save', "test" + datetime.now + ".jpg", 'successful?', save_success)
 
-            imgrecognTest.runAnalysis("C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/test.jpg")
+            #imgrecognTest.runAnalysis("C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/test.jpg")
             
         #     frame = cv2.imread(raw_image_path)
             
