@@ -27,7 +27,9 @@ class TestImageZMQ():
             camera = PiCamera(resolution=(1920,1080))  # '1920x1080'
             camera.hflip = True 
             rawCapture = PiRGBArray(camera)
-            
+            print('before')
+            print(rawCapture)
+            print('after')
             # allow the camera to warmup
             time.sleep(0.1)
             
@@ -35,6 +37,7 @@ class TestImageZMQ():
             camera.capture(rawCapture, format='bgr')
             image = rawCapture.array
             print("image taken")
+            print(image)
             camera.close()
 
            # print('Time taken to take picture: ' + str(datetime.now() - start_time) + 'seconds')
@@ -52,7 +55,7 @@ class TestImageZMQ():
 
     def _process_pic(self, image):
         # initialize the ImageSender object with the socket address of the server
-        image_sender = imagezmq.ImageSender(connect_to="tcp://192.168.18.11:5555")
+        image_sender = imagezmq.ImageSender(connect_to="tcp://10.27.156.225:5555")
         print("connected")
         image_id_list = []
         while True:
