@@ -138,6 +138,9 @@ def runAnalysis(img_path):
             i = i+1   
     print("Best Result")
     print(bestResults[1],bestResults[0])
+
+    if bestResults[1] == 0:
+        return print('No Matched Found')
     
     #Draw coutour to original image
     x, y, w, h = bestResults[2]
