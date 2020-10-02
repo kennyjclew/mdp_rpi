@@ -130,7 +130,7 @@ def runAnalysis(img_path):
     for pred in predictions:
             prob = np.max(pred, axis=1)
             classLabel = np.argmax(pred, axis=1)
-            if prob > 0.80 and prob > bestResults[1]:
+            if prob > 0.90 and prob > bestResults[1]:
                 bestResults[1] = prob
                 classLabel = np.argmax(pred, axis=1)
                 bestResults[0] = CATEGORIES[classLabel[0]]
