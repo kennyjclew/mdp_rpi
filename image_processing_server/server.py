@@ -18,6 +18,10 @@ import imgrecognTest
 # from utils import label_map_util
 # from utils import visualization_utils as vis_util
 
+#FOR IMAGE SPLICING
+from scipy import misc
+import imageio
+
 
 # sys.path.append("..")
 
@@ -102,7 +106,7 @@ class ImageProcessingServer:
             print('Waiting for image from RPi...')
 
             # receive RPi name and frame from the RPi and acknowledge the receipt
-            _, frame = self.image_hub.recv_image()
+            coord , frame = self.image_hub.recv_image()
             print('Connected and received frame at time: ' + str(datetime.now()))
             
             # resize the frame to have a width of IMAGE_WIDTH pixels, then
@@ -132,13 +136,20 @@ class ImageProcessingServer:
             # raw_image_name = RAW_IMAGE_PREFIX + str(len(self.frame_list)) + IMAGE_ENCODING
             # raw_image_path = os.path.join(self.raw_image_dir_path, raw_image_name)
             
+            datetimestring = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
         #     # save raw image
-            save_success = cv2.imwrite("C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/test.jpg", frame)
+            save_success = cv2.imwrite("C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/trainingimages/FULL" + datetimestring + ".jpg", frame)
             print('save', "test.jpg", 'successful?', save_success)
-            #print('save', "test" + date.strftime() + ".jpg", 'successful?', save_success)
 
-            imgrecognTest.runAnalysis("C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/test.jpg")
+            test3tuple = cut_image(self, "C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/trainingimages/FULL" + datetimestring + ".jpg", 
+            "C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/SLICED_IMAGES/")
+
+            leftResult = imgrecognTest.runAnalysis("C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/SLICED_IMAGES/" + test3tuple[0])
+            middleResult = imgrecognTest.runAnalysis("C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/SLICED_IMAGES/" + test3tuple[1])
+            rightResult = imgrecognTest.runAnalysis("C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/SLICED_IMAGES/" + test3tuple[2])
             
+            #if leftResult is not None:
+
         #     frame = cv2.imread(raw_image_path)
             
         #     # Perform the actual detection by running the model with the image as input
@@ -342,3 +353,27 @@ class ImageProcessingServer:
     #         num_symbols += 1
 
     #     return obstacle_symbol_map, bounding_boxes, classes, scores
+
+
+#FOR IMAGE SPLICING
+def cut_image(self, img_path, save_path): 
+    # Read the image
+    img = imageio.imread(img_path)
+    height, width, _ = img.shape
+    # print(img.shape)
+
+    # Cut the image in half
+    width_cutoff = width // 3
+    s1 = img[:, :width_cutoff]
+    s2 = img[:,width_cutoff: width_cutoff*2]
+    s3 = img[:, width_cutoff*2:]
+    #s3 = img[width_cutoff*2:,:]
+
+    datetimestring = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+
+    # Save each half
+    imageio.imsave(save_path+ datetimestring + "_face1.jpg", s1)
+    imageio.imsave(save_path+ datetimestring + "_face2.jpg", s2)
+    imageio.imsave(save_path+ datetimestring + "_face3.jpg", s3)
+
+    return (datetimestring+"_face1.jpg", datetimestring+"_face2.jpg", datetimestring+"_face3.jpg")
