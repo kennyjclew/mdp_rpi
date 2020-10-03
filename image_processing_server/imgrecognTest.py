@@ -168,7 +168,6 @@ def runAnalysis(img_path):
     for pred in predictions:
             prob = np.max(pred, axis=1)
             classLabel = np.argmax(pred, axis=1)
-
             if prob > 0.95 and prob > bestResults[1]:
                 bestResults[1] = prob
                 classLabel = np.argmax(pred, axis=1)
@@ -179,6 +178,9 @@ def runAnalysis(img_path):
     print("\n")
     print("Best Result")
     print(bestResults[1],bestResults[0])
+
+    if bestResults[1] == 0:
+        return print('No Matched Found')
     
     #Draw coutour to original image
     x, y, w, h = bestResults[2]
