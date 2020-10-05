@@ -27,11 +27,11 @@ class Multithreading:
     def __init__(self):
 
         #instantiate all classes used
-        self.arduino = Arduino()
-        self.android = Android()
+        #self.arduino = Arduino()
+        #self.android = Android()
         self.pc = PCserver(HOST_IP, PORT)
 
-        self.alldevices = [self.arduino, self.android, self.pc] 
+        self.alldevices = [self.pc] 
 
         #connect all devices
         self.connect_all_devices()
@@ -51,14 +51,14 @@ class Multithreading:
 
         #not sure if need disconnect_all for all the modules? 
         #if one never connect, then have to disconnect all? consider during testing
-        self.r_arduino_thread = multiprocessing.Process(target=self.arduino_continuous_read, args=(self.msgqueue,))
-        self.r_android_thread = multiprocessing.Process(target=self.android_continuous_read, args=(self.msgqueue,))
+        #self.r_arduino_thread = multiprocessing.Process(target=self.arduino_continuous_read, args=(self.msgqueue,))
+        #self.r_android_thread = multiprocessing.Process(target=self.android_continuous_read, args=(self.msgqueue,))
         self.r_pc_thread = multiprocessing.Process(target=self.pc_continuous_read, args=(self.msgqueue, self.imgqueue, ))
             #KIV: not sure if need args. check back later
 
         self.w_thread = multiprocessing.Process(target=self.write_to_device, args=(self.msgqueue,))
 
-        self.allthreads = [self.r_arduino_thread, self.r_android_thread, self.r_pc_thread, self.w_thread, self.w_image_thread]
+        self.allthreads = [self.r_pc_thread, self.w_thread, self.w_image_thread]
 
         self.start_all_threads()
         

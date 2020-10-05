@@ -55,7 +55,7 @@ class PCToAndroid:
     # ALIGN_FRONT = 'V'.encode()[0]
 
 class PCToRPi:
-    TAKE_PICTURE = 'TP'.encode()
+    TAKE_PICTURE = 'TP'
     EXPLORATION_DONE = 'ED'.encode()
 
 
