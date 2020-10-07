@@ -1,4 +1,8 @@
 from multithreading import Multithreading 
 import time
-a = Multithreading()
-time.sleep(2)
+try:
+    processes = Multithreading()
+except KeyboardInterrupt:
+    print("stopping all threads and disconnecting all devices")
+    processes.stop_all()
+    print("the end")
