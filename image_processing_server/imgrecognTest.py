@@ -126,7 +126,7 @@ def checkBrightness(target):
             for j in range(1, y-1):
                 if j%column_percent == 0:
                     pix_cord = (i,j)
-cv2.circle(img_dot, (int(i), int(j)), 5, (0, 255, 0), 2)
+                    cv2.circle(img_dot, (int(i), int(j)), 5, (0, 255, 0), 2)
                     img_segment = l_blur[i:i+3, j:j+3]
                     (minVal, maxVal, minLoc, maxLoc) = cv2.minMaxLoc(img_segment)
                     maxval.append(maxVal)

@@ -141,6 +141,8 @@ class ImageProcessingServer:
             save_success = cv2.imwrite("C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/trainingimages/FULL" + datetimestring + ".jpg", frame)
             print('save', "test.jpg", 'successful?', save_success)
 
+            fullResult = imgrecognTest.runAnalysis("C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/trainingimages/FULL" + datetimestring + ".jpg")
+
             test3tuple = cut_image(self, "C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/trainingimages/FULL" + datetimestring + ".jpg", 
             "C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/SLICED_IMAGES/")
 
