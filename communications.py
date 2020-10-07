@@ -53,6 +53,7 @@ class PCToAndroid:
     # SENSE_ALL = 'Z'.encode()[0]
     # ALIGN_RIGHT = 'B'.encode()[0]
     # ALIGN_FRONT = 'V'.encode()[0]
+    ROBOT_POSITION = 'RP'.encode()
 
 class PCToRPi:
     TAKE_PICTURE = 'TP'

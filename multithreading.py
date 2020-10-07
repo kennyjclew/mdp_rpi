@@ -39,6 +39,7 @@ class Multithreading:
 
         #msg queues. reads will add to the queue, writes will read from the queue
         self.msgqueue = multiprocessing.Queue()
+        self.updatesqueue = multiprocessing.Queue() #mainly for pc to android for live updating of map on android
         #each object in queue is a list [DEST_HEADER, MSG]
 
         
@@ -53,12 +54,13 @@ class Multithreading:
         #if one never connect, then have to disconnect all? consider during testing
         self.r_arduino_thread = multiprocessing.Process(target=self.arduino_continuous_read, args=(self.msgqueue,))
         self.r_android_thread = multiprocessing.Process(target=self.android_continuous_read, args=(self.msgqueue,))
-        self.r_pc_thread = multiprocessing.Process(target=self.pc_continuous_read, args=(self.msgqueue, self.imgqueue, ))
+        self.r_pc_thread = multiprocessing.Process(target=self.pc_continuous_read, args=(self.msgqueue, self.imgqueue, self.updatesqueue,))
             #KIV: not sure if need args. check back later
 
         self.w_thread = multiprocessing.Process(target=self.write_to_device, args=(self.msgqueue,))
+        self.w_updates_thread = multiprocessing.Process(target=self.write_to_device, args=(self.updatesqueue,))
 
-        self.allthreads = [self.r_arduino_thread, self.r_android_thread, self.r_pc_thread, self.w_thread, self.w_image_thread]
+        self.allthreads = [self.r_arduino_thread, self.r_android_thread, self.r_pc_thread, self.w_thread, self.w_image_thread, self.w_updates_thread]
 
         self.start_all_threads()
         
@@ -122,7 +124,7 @@ class Multithreading:
             else:
                 print("received invalid message from android")
 
-    def pc_continuous_read(self, msgqueue, imgqueue):
+    def pc_continuous_read(self, msgqueue, imgqueue, updatesqueue):
         while True:
             msg = self.pc.read()
             #pc either sends to android (only mapstring) or rpi
@@ -132,7 +134,9 @@ class Multithreading:
                 if msg is None:
                     continue
                 elif msg[0] == PCToAndroid.MAP_STRING: #PC must send MAPSTRING with MAP_STRING as a header
-                    msgqueue.put([ANDROID_HEADER, msg[1:]])
+                    updatesqueue.put([ANDROID_HEADER, msg[1:]])
+                elif msg[:2] == PCToAndroid.ROBOT_POSITION:
+                    updatesqueue.put([ANDROID_HEADER, msg[2:]])
                 elif msg[:2] == PCToRPi.TAKE_PICTURE:
                     print("pc tells rpi to take picture")
                     img = self.take_picture(imgqueue)
@@ -161,7 +165,7 @@ class Multithreading:
     #------IMAGE RECOGNITION METHODS------
     def take_picture(self, imgqueue):
         try:
-            rpicamera = PiCamera(resolution=(1920,1080))
+            rpicamera = PiCamera(resolution=(1920,1088))
             rpicamera.hflip = True
             outputtype = PiRGBArray(rpicamera)
             #time.sleep(0.1) #camera may need to warm up? KIV
@@ -181,8 +185,8 @@ class Multithreading:
         return imgtaken
 
     def write_to_imgserver(self, imgqueue, msgqueue):
-       # image_sender = imagezmq.ImageSender(connect_to="tcp://192.168.21.31:5555") #bryna
-        image_sender = imagezmq.ImageSender(connect_to="tcp://192.168.21.35:5555") #kenny
+        image_sender = imagezmq.ImageSender(connect_to="tcp://192.168.21.31:5555") #bryna
+        #image_sender = imagezmq.ImageSender(connect_to="tcp://192.168.21.35:5555") #kenny
         print("connected to image server")
         while True:
             if not imgqueue.empty():
