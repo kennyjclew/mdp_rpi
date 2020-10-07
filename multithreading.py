@@ -84,8 +84,12 @@ class Multithreading:
             if thread.is_alive():
                 thread.terminate()
 
-        for device in self.alldevices:
-            device.disconnect() #KIV: not sure if need to disconnect_all?
+        # for device in self.alldevices:
+        #     device.disconnect() #KIV: not sure if need to disconnect_all?
+        
+        self.arduino.disconnect()
+        self.android.disconnect_all()
+        self.pc.disconnect_both()
         
 
 
