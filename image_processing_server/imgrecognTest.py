@@ -21,6 +21,7 @@ from keras.preprocessing.image import load_img
 from keras.preprocessing.image import img_to_array
 from keras.utils import to_categorical
 from numpy import expand_dims
+
 import datetime as dt
 
 def getArchitecture():
@@ -189,5 +190,6 @@ def runAnalysis(img_path):
     text = "{}: {:.2f}%".format(bestResults[0].upper(), (bestResults[1]*100)[0])
     cv2.putText(img, text, (x, y - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0), 2)
     filename = r'C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/processed images/' + bestResults[0] + str(imageCounter) + '_' + dt.datetime.now().strftime("%Y%m%d-%H%M%S") + '.jpg' #CHANGE PATH
+
     cv2.imwrite(filename, img)
     imageCounter = imageCounter + 1

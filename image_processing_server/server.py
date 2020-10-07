@@ -107,7 +107,7 @@ class ImageProcessingServer:
 
             # receive RPi name and frame from the RPi and acknowledge the receipt
             coord , frame = self.image_hub.recv_image()
-            print('Connected and received frame at time: ' + str(datetime.now()))
+            print('Connected and received frame at time: ' + str(datetime.now()) + "at coordinate: " + coord)
             
             # resize the frame to have a width of IMAGE_WIDTH pixels, then
             # grab the frame dimensions and construct a blob

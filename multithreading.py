@@ -106,18 +106,17 @@ class Multithreading:
 
             if msg is None:
                 continue
-            elif msg in AndroidToRPi.ANDTORPI_MESSAGES: #send to both arduino and pc
-                msgqueue.put([PC_HEADER, msg])
-            elif (msg[:8] == "waypoint"):
+            elif (msg[:8] == AndroidToPC.WAYPOINT): #send waypoints to pc
                 waypoint_coord = msg[10:-1]
                 print("Hello waypoint" + waypoint_coord)
                 msgqueue.put([PC_HEADER, waypoint_coord])
+            elif msg in AndroidToArduino.ANDTOARD_MESSAGES: #AND sends WSAD, calibrate to ARD
+                msgqueue.put([ARDUINO_HEADER, msg])
+            elif msg in AndroidToRPi.ANDTORPI_MESSAGES: #send to both arduino and pc
+                msgqueue.put([PC_HEADER, msg])
+                msgqueue.put([ARDUINO_HEADER, msg])
             else:
                 print("received invalid message from android")
-            
-            #need to send to arduino no matter what
-            msgqueue.put([ARDUINO_HEADER, msg])
-
 
     def pc_continuous_read(self, msgqueue, imgqueue):
         while True:
@@ -129,7 +128,7 @@ class Multithreading:
                 if msg is None:
                     continue
                 elif msg[0] == PCToAndroid.MAP_STRING: #PC must send MAPSTRING with MAP_STRING as a header
-                    msgqueue.put([ANDROID_HEADER, msg])
+                    msgqueue.put([ANDROID_HEADER, msg[1:]])
                 elif msg[:2] == PCToRPi.TAKE_PICTURE:
                     print("pc tells rpi to take picture")
                     img = self.take_picture(imgqueue)
