@@ -29,10 +29,10 @@ class PCserver:
     def connect(self):
         connected = False
         while not connected:
-            print("trying to connect...")
+            print("trying to connect to pc...")
             self.conn, self.addr = self.s.accept() #gets client socket object conn
             if (self.conn and self.addr) is not None:
-                print("connected!")
+                print("connected to pc!")
                 connected = True
 
 
@@ -42,7 +42,7 @@ class PCserver:
             self.conn.close()
             self.conn = None
             self.addr = None
-            print("client socket closed")
+            print("pc client socket closed")
 
     #close both client and server socket - unnecessary?
     def disconnect_both(self):
@@ -50,16 +50,16 @@ class PCserver:
             self.conn.close()
             self.conn = None
             self.addr = None
-            print("client socket closed")
+            print("pc client socket closed")
         if self.s is not None:
             self.s.close()
             self.s = None
-            print("server socket closed")
+            print("rpi's pcserver socket closed")
 
     #receive data from client
     def read(self):
         data = self.conn.recv(1024).decode('utf-8')
-        print("server received data " + data)
+        print("rpi received data from pc:  " + data)
         if len(data) > 0:
             return data
         else:
@@ -68,7 +68,7 @@ class PCserver:
     #send data to client
     def write(self, data):
         self.conn.send((data+'\n').encode('utf-8'))
-        print("server sending data " + data)
+        print("rpi forwarding data from pc: " + data)
 
 
 
