@@ -1,5 +1,8 @@
 from multithreading import Multithreading 
 import time
+import os
+
+os.system("sudo hciconfig hci0 piscan")
 
 try:
     processes = Multithreading()
