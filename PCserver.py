@@ -65,10 +65,10 @@ class PCserver:
         else:
             return None
 
-    #send data to client
+    #send data to client (pc)
     def write(self, data):
         self.conn.send((data+'\n').encode('utf-8'))
-        print("server sending data " + data)
+        print("rpi forwarding data to pc: " + data)
 
 
 

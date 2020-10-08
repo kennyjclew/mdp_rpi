@@ -81,35 +81,46 @@ class Multithreading:
     def checkconnections(self):
         while True:
             #assumes that process dies when target dies?????
-            if not self.r_arduino_thread.is_alive():
-                print("restarting connection with arduino")
-                self.arduino.disconnect()
+            arduinoalive = self.r_arduino_thread.is_alive()
+            androidalive = self.r_android_thread.is_alive()
+            pcalive = self.r_android_thread.is_alive()
+
+            if (arduinoalive and androidalive and pcalive):
+                continue
+            else:
                 try:
-                    self.arduino.connect()
-                except Exception as error:
+                    #stop all write processes so robot pauses
+                    self.w_thread.terminate()
+                    self.w_updates_thread.terminate()
+
+                    if not arduinoalive:
+                        print("restarting connection with arduino")
+                        self.arduino.disconnect()
+                        self.r_arduino_thread.terminate()
+                        self.arduino.connect()
+                        self.r_arduino_thread = multiprocessing.Process(target=self.arduino_continuous_read, args=(self.msgqueue,))
+                        self.r_arduino_thread.start()
+                    elif not androidalive:
+                        print("restarting connection with android")
+                        self.android.disconnect()
+                        self.r_android_thread.terminate()
+                        self.android.connect()  
+                        self.r_android_thread = multiprocessing.Process(target=self.android_continuous_read, args=(self.msgqueue,))
+                        self.r_android_thread.start()
+                    elif not pcalive:
+                        print("restarting connection with pc")
+                        self.pc.disconnect()
+                        self.r_pc_thread.terminate()
+                        self.pc.connect()
+                        self.r_pc_thread = multiprocessing.Process(target=self.pc_continuous_read, args=(self.msgqueue, self.imgqueue, self.updatesqueue,))
+                        self.r_pc_thread.start()
+                    self.w_thread = multiprocessing.Process(target=self.write_to_device, args=(self.msgqueue,))
+                    self.w_updates_thread = multiprocessing.Process(target=self.write_to_device, args=(self.updatesqueue,))
+                    self.w_thread.start()
+                    self.w_updates_thread.start()
+                except Exception as e:
+                    print("error while reconnecting: " + e)
                     continue
-                self.r_arduino_thread = multiprocessing.Process(target=self.arduino_continuous_read, args=(self.msgqueue,))
-                self.r_arduino_thread.start()
-            elif not self.r_android_thread.is_alive():
-                print("restarting connection with android")
-                self.android.disconnect()
-                try:
-                    self.android.connect()
-                except Exception as error:
-                    continue
-                self.r_android_thread = multiprocessing.Process(target=self.android_continuous_read, args=(self.msgqueue,))
-                self.r_android_thread.start()
-            elif not self.r_pc_thread.is_alive():
-                print("restarting connection with pc")
-                self.pc.disconnect()
-                try:
-                    self.pc.connect()
-                except Exception as error:
-                    continue
-                self.r_pc_thread = multiprocessing.Process(target=self.pc_continuous_read, args=(self.msgqueue,))
-                self.r_pc_thread.start()
-            
-        #not sure why they reconnected the write threads also? kiv if need to do.
 
 
     def arduino_continuous_read(self, msgqueue):
