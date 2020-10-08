@@ -41,9 +41,9 @@ class Arduino:
 
     def read(self):
         try:
-            print("HELLO")
+            #print("HELLO")
             message = self.connection.readline().strip().decode()
-            print(message)
+            print("received from Arduino "+message)
             '''counter = 0
             message_list = []
             while (counter < 5):
@@ -59,7 +59,7 @@ class Arduino:
             
             message = ''.join(message_list)'''
             if len(message)>0:
-               print("it works " + message)
+               #print("it works " + message)
                return message
             else:
                print("nothing read")

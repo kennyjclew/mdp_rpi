@@ -21,13 +21,13 @@ class AndroidToArduino:
     CALIBRATE_SENSOR = 'C|'
 
     #for rpi to check if msg is valid. 
-    # ANDTOARD_MESSAGES = [
-    #     MOVE_FORWARD,
-    #     MOVE_BACK,
-    #     TURN_LEFT,
-    #     TURN_RIGHT,
-    #     CALIBRATE_SENSOR,
-    # ]
+    ANDTOARD_MESSAGES = [
+        MOVE_FORWARD,
+        MOVE_BACK,
+        TURN_LEFT,
+        TURN_RIGHT,
+        CALIBRATE_SENSOR,
+    ]
 
 #to send to both arduino and pc
 class AndroidToRPi:
@@ -36,8 +36,8 @@ class AndroidToRPi:
 
     ANDTORPI_MESSAGES = [START_EXPLORATION, START_FASTEST_PATH]
 
-# class AndroidToPC:
-#     UPDATE_ARENA = 'UA|'.encode()
+class AndroidToPC:
+    WAYPOINT = 'waypoint'
 
 #Arduino messages (about distances) will be passed directly to algo 
 
@@ -53,6 +53,7 @@ class PCToAndroid:
     # SENSE_ALL = 'Z'.encode()[0]
     # ALIGN_RIGHT = 'B'.encode()[0]
     # ALIGN_FRONT = 'V'.encode()[0]
+    ROBOT_POSITION = 'RP'
 
 class PCToRPi:
     TAKE_PICTURE = 'TP'

@@ -1,31 +1,33 @@
-
-
+import time
+from picamera import PiCamera
+from picamera.array import PiRGBArray
+import base64
 def _take_pic():
     try:
-        start_time = datetime.now()
+       # start_time = datetime.now()
 
         # initialize the camera and grab a reference to the raw camera capture
         camera = PiCamera(resolution=(1920, 1080))  # '1920x1080'
+        camera.hflip = True 
         rawCapture = PiRGBArray(camera)
-        
         # allow the camera to warmup
         time.sleep(0.1)
         
         # grab an image from the camera
         camera.capture(rawCapture, format='bgr')
-        image = rawCapture.array
+        camera.capture('foo.jpg')
+        with open("foo.jpg", "rb") as image_file:
+            encoded_string = base64.b64encode(image_file.read())
+        print(type(encoded_string))
+        text_file = open("sample.txt", "w")
+        n = text_file.write(encoded_string.decode())
+        text_file.close()
+       # image = rawCapture.array
         camera.close()
-
-        print('Time taken to take picture: ' + str(datetime.now() - start_time) + 'seconds')
-        
-        # to gather training images
-        # os.system("raspistill -o images/test"+
-        # str(start_time.strftime("%d%m%H%M%S"))+".png -w 1920 -h 1080 -q 100")
-    
     except Exception as error:
         print('Taking picture failed: ' + str(error))
     
-    return image
+    return True
 
 a = _take_pic()
 print(a)

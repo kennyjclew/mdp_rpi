@@ -1,4 +1,4 @@
-from multithreading_temp import Multithreading 
+from multithreading import Multithreading 
 import time
 
 try:
@@ -7,3 +7,4 @@ except KeyboardInterrupt:
     print("stopping all threads and disconnecting all devices")
     processes.stop_all()
     print("the end")
+
