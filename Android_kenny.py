@@ -86,6 +86,12 @@ class Android:
 
         except Exception as error:	
             print("Android disconnect failed: " + str(error))
+
+    def checkconnections(self):
+        if (self.client_sock is None) or (self.server_sock is None):
+            return False
+        else:
+            return True
         
     def read(self):
         try:

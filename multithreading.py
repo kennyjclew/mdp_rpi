@@ -118,7 +118,7 @@ class Multithreading:
                         self.arduino.connect()
                         self.r_arduino_thread = multiprocessing.Process(target=self.arduino_continuous_read, args=(self.msgqueue,))
                         self.r_arduino_thread.start()
-                    elif not androidalive:
+                    elif not (androidalive and self.android.checkconnections()):
                         print("restarting connection with android")
                         self.android.disconnect()
                         self.r_android_thread.terminate()
