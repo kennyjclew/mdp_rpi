@@ -58,17 +58,29 @@ class PCserver:
 
     #receive data from client
     def read(self):
-        data = self.conn.recv(1024).decode('utf-8')
-        print("rpi received data from pc:  " + data)
-        if len(data) > 0:
-            return data
-        else:
-            return None
+        try:
+            data = self.conn.recv(1024).decode('utf-8')
+            print("rpi received data from pc:  " + data)
+            if len(data) > 0:
+                return data
+            else:
+                return None
+        except Exception as error:
+            print('reading PC failed: ' + str(error))
+            print("Attempting to restart connection with PC...")
+            self.disconnect_all() #not sure if disconnect_all or disconnect here
+            self.connect()
 
     #send data to client (pc)
     def write(self, data):
-        self.conn.send((data+'\n').encode('utf-8'))
-        print("rpi forwarding data to pc: " + data)
+        try:
+            self.conn.send((data+'\n').encode('utf-8'))
+            print("rpi forwarding data to pc: " + data)
+        except Exception as error:	
+            print('writing to PC failed: ' + str(error))
+            print("Attempting to restart connection with PC...")
+            self.disconnect_all() #not sure if disconnect_all or disconnect here
+            self.connect()
 
 
 
