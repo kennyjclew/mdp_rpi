@@ -88,8 +88,6 @@ class Android:
             print("Android disconnect failed: " + str(error))
 
     def checkconnections(self):
-        print("android client_sock status: " + self.client_sock)
-        print("android server_sock status: " + self.server_sock)
         if (self.client_sock is None) or (self.server_sock is None):
             return False
         else:
@@ -111,10 +109,7 @@ class Android:
             
         except Exception as error:
             print('Android read failed: ' + str(error))
-            print("Attempting to restart connection with Android...")
-            self.disconnect_all() #not sure if disconnect_all or disconnect here
-            self.connect()
-
+            raise error
       
     def write(self, message):
         try:
@@ -124,6 +119,4 @@ class Android:
 
         except Exception as error:	
             print('Android write failed: ' + str(error))
-            print("Attempting to restart connection with Android...")
-            self.disconnect_all() #not sure if disconnect_all or disconnect here
-            self.connect()
+            raise error
