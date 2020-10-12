@@ -181,7 +181,7 @@ def runAnalysis(img_path):
     print(bestResults[1],bestResults[0])
 
     if bestResults[1] == 0:
-        return print('No Matched Found')
+        return 'No Matched Found'
     
     #Draw coutour to original image
     x, y, w, h = bestResults[2]
@@ -193,3 +193,5 @@ def runAnalysis(img_path):
 
     cv2.imwrite(filename, img)
     imageCounter = imageCounter + 1
+
+    return bestResults[0] #not sure if correct -bryna

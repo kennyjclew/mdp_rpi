@@ -106,8 +106,20 @@ class ImageProcessingServer:
             print('Waiting for image from RPi...')
 
             # receive RPi name and frame from the RPi and acknowledge the receipt
-            coord , frame = self.image_hub.recv_image()
-            print('Connected and received frame at time: ' + str(datetime.now()) + "at coordinate: " + coord)
+            coord , frame = self.image_hub.recv_image() #coord in format y(row)|x(col)
+
+            print('Connected and received frame at time: ' + str(datetime.now()) + " at coordinate: " + coord)
+            
+            coordlist = coord.split("|")
+            leftcoord = str("(" + coordlist[0] + " , " + coordlist[1] + ")")
+            middlecoord = str("(" + coordlist[2] + " , " + coordlist[3] + ")")
+            rightcoord = str("(" + coordlist[4] + " , " + coordlist[5] + ")")
+
+
+            print("left: " + leftcoord + "; middle: " + middlecoord + "; right: " + rightcoord)
+            
+
+            
             
             # resize the frame to have a width of IMAGE_WIDTH pixels, then
             # grab the frame dimensions and construct a blob
@@ -137,18 +149,25 @@ class ImageProcessingServer:
             # raw_image_path = os.path.join(self.raw_image_dir_path, raw_image_name)
             
             datetimestring = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+
+            baseurl = "C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test"
         #     # save raw image
-            save_success = cv2.imwrite("C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/trainingimages/FULL" + datetimestring + ".jpg", frame)
+            save_success = cv2.imwrite(baseurl + "/trainingimages/FULL" + datetimestring + ".jpg", frame)
             print('save', "test.jpg", 'successful?', save_success)
 
-            fullResult = imgrecognTest.runAnalysis("C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/trainingimages/FULL" + datetimestring + ".jpg")
+            fullResult = imgrecognTest.runAnalysis(baseurl + "/trainingimages/FULL" + datetimestring + ".jpg")
+            print("\n fullResult: " + fullResult + " between " + leftcoord + " and " + rightcoord + "\n")
 
-            test3tuple = cut_image(self, "C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/trainingimages/FULL" + datetimestring + ".jpg", 
-            "C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/SLICED_IMAGES/")
+            test3tuple = cut_image(self, baseurl + "/trainingimages/FULL" + datetimestring + ".jpg", baseurl + "/SLICED_IMAGES/")
 
-            leftResult = imgrecognTest.runAnalysis("C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/SLICED_IMAGES/" + test3tuple[0])
-            middleResult = imgrecognTest.runAnalysis("C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/SLICED_IMAGES/" + test3tuple[1])
-            rightResult = imgrecognTest.runAnalysis("C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/SLICED_IMAGES/" + test3tuple[2])
+            leftResult = imgrecognTest.runAnalysis(baseurl + "/SLICED_IMAGES/" + test3tuple[0])
+            print("\n LeftResult: " + leftResult + " at " + leftcoord + "\n")
+
+            middleResult = imgrecognTest.runAnalysis(baseurl + "/SLICED_IMAGES/" + test3tuple[1])
+            print("\n middleResult: " + middleResult + " at " + middlecoord + "\n")
+            
+            rightResult = imgrecognTest.runAnalysis(baseurl + "/SLICED_IMAGES/" + test3tuple[2])
+            print("\n rightResult: " + rightResult + " at " + rightcoord + "\n")
             
             #if leftResult is not None:
 
