@@ -58,18 +58,27 @@ class PCserver:
 
     #receive data from client
     def read(self):
-        data = self.conn.recv(1024).decode('utf-8')
-        print("rpi received data from pc:  " + data)
-        if len(data) > 0:
-            return data
-        else:
-            return None
+        try:
+            data = self.conn.recv(1024).decode('utf-8')
+            print("rpi received data from pc:  " + data)
+            if len(data) > 0:
+                return data
+            else:
+                return None
+        except Exception as error:
+            print("PC read failed: " + str(error))
+            #multithreading will handle the error by stopping the thread, getting reconnection
+            raise error 
 
     #send data to client (pc)
     def write(self, data):
-        self.conn.send((data+'\n').encode('utf-8'))
-        print("rpi forwarding data to pc: " + data)
-
+        try:
+            self.conn.send((data+'\n').encode('utf-8'))
+            print("rpi forwarding data to pc: " + data)
+        except Exception as error:
+            print("PC write failed: " + str(error))
+            #multithreading will handle the error by stopping the thread, getting reconnection
+            raise error 
 
 
 

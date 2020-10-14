@@ -34,10 +34,12 @@ class Arduino:
             self.connection.write(message.encode())
         except Exception as error:
             print('Write to Arduino FAILED. Error Message: ' + str(error))
-            print('Try to reconnect with Arduino')
-            self.disconnect()
-            time.sleep(5)
-            self.connect()
+            #multithreading will handle the error by stopping the thread, getting reconnection
+            raise error 
+            # print('Try to reconnect with Arduino')
+            # self.disconnect()
+            # time.sleep(5)
+            # self.connect()
 
     def read(self):
         try:
@@ -66,7 +68,9 @@ class Arduino:
             return None
         except Exception as error:
             print('Read from Arduino FAILED. Error Message: ' + error)
-            print('Try to reconnect with Arduino')
-            self.disconnect()
-            time.sleep(5)
-            self.connect()
+            #multithreading will handle the error by stopping the thread, getting reconnection
+            raise error 
+            # print('Try to reconnect with Arduino')
+            # self.disconnect()
+            # time.sleep(5)
+            # self.connect()

@@ -144,57 +144,68 @@ class Multithreading:
 
     def arduino_continuous_read(self, msgqueue):
         while True:
-            msg = self.arduino.read()
-            #arduino only sends msges to PC. directly forward msg.
+            try:
+                msg = self.arduino.read()
+                #arduino only sends msges to PC. directly forward msg.
 
-            if msg is None:
-                continue
-            
-            msgqueue.put([PC_HEADER, msg]) 
-            #KIV: ??nowait: raise Full exception immediately??
+                if msg is None:
+                    continue
+                
+                msgqueue.put([PC_HEADER, msg]) 
+                #KIV: ??nowait: raise Full exception immediately??
+            except:
+                print("ending arduino thread")
+                break #restart thread
 
     def android_continuous_read(self, msgqueue):
         while True:
-            msg = self.android.read()
+            try:
+                msg = self.android.read()
 
-            if msg is None:
-                continue
-            elif (msg[:8] == AndroidToPC.WAYPOINT): #send waypoints to pc
-                waypoint_coord = msg[10:-1]
-                print("Hello waypoint" + waypoint_coord)
-                msgqueue.put([PC_HEADER, waypoint_coord])
-            elif msg in AndroidToArduino.ANDTOARD_MESSAGES: #AND sends WSAD, calibrate to ARD
-                msgqueue.put([ARDUINO_HEADER, msg])
-            elif msg in AndroidToRPi.ANDTORPI_MESSAGES: #send to both arduino and pc
-                msgqueue.put([PC_HEADER, msg])
-                msgqueue.put([ARDUINO_HEADER, msg])
-            else:
-                print("received invalid message from android")
-
+                if msg is None:
+                    continue
+                elif (msg[:8] == AndroidToPC.WAYPOINT): #send waypoints to pc
+                    waypoint_coord = msg[10:-1]
+                    print("Hello waypoint" + waypoint_coord)
+                    msgqueue.put([PC_HEADER, waypoint_coord])
+                elif msg in AndroidToArduino.ANDTOARD_MESSAGES: #AND sends WSAD, calibrate to ARD
+                    msgqueue.put([ARDUINO_HEADER, msg])
+                elif msg in AndroidToRPi.ANDTORPI_MESSAGES: #send to both arduino and pc
+                    msgqueue.put([PC_HEADER, msg])
+                    msgqueue.put([ARDUINO_HEADER, msg])
+                else:
+                    print("received invalid message from android")
+            except:
+                print("ending android thread")
+                break #restart thread
 
     def pc_continuous_read(self, msgqueue, imgqueue, updatesqueue):
         while True:
-            msg = self.pc.read()
-            #pc either sends to android (only mapstring) or rpi
-            msg_list = msg.splitlines()
-            for msg in msg_list:
-                print("READING PC "+ msg)
-                if msg is None:
-                    continue
-                elif msg[0] == PCToAndroid.MAP_STRING: #PC must send MAPSTRING with MAP_STRING as a header
-                    updatesqueue.put([ANDROID_HEADER, msg[1:]])
-                elif msg[:2] == PCToAndroid.ROBOT_POSITION:
-                    updatesqueue.put([ANDROID_HEADER, msg[2:]])
-                elif msg[:2] == PCToRPi.TAKE_PICTURE:
-                    print("pc tells rpi to take picture")
-                    img = self.take_picture(imgqueue)
-                    imgqueue.put([msg[3:], img])
-                elif msg == PCToRPi.EXPLORATION_DONE:
-                    #KIV: RPI DO SOMETHING. display all images recognised?
-                    print("pc tells rpi that exploration done")
-                else:
-                    msgqueue.put([ARDUINO_HEADER, msg])
-                    print("msg from PC forwarding to arduino")
+            try:
+                msg = self.pc.read()
+                #pc either sends to android (only mapstring) or rpi
+                msg_list = msg.splitlines()
+                for msg in msg_list:
+                    print("READING PC "+ msg)
+                    if msg is None:
+                        continue
+                    elif msg[0] == PCToAndroid.MAP_STRING: #PC must send MAPSTRING with MAP_STRING as a header
+                        updatesqueue.put([ANDROID_HEADER, msg[1:]])
+                    elif msg[:2] == PCToAndroid.ROBOT_POSITION:
+                        updatesqueue.put([ANDROID_HEADER, msg[2:]])
+                    elif msg[:2] == PCToRPi.TAKE_PICTURE:
+                        print("pc tells rpi to take picture")
+                        img = self.take_picture(imgqueue)
+                        imgqueue.put([msg[3:], img])
+                    elif msg == PCToRPi.EXPLORATION_DONE:
+                        #KIV: RPI DO SOMETHING. display all images recognised?
+                        print("pc tells rpi that exploration done")
+                    else:
+                        msgqueue.put([ARDUINO_HEADER, msg])
+                        print("msg from PC forwarding to arduino")
+            except:
+                print("ending pc thread")
+                break #restart thread
                 
 
     def write_to_device(self, msgqueue):
