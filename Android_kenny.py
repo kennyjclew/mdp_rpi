@@ -11,7 +11,7 @@ via the server/client.
 # bluetooth reference: https://people.csail.mit.edu/albert/bluez-intro/index.html
 LOCALE = 'UTF-8'
 ANDROID_SOCKET_BUFFER_SIZE = 512
-UUID = '443559ba-b80f-4fb6-99d9-ddbcd6138fbd'
+UUID = '00001101-0000-1000-8000-00805f9b34fb' #443559ba-b80f-4fb6-99d9-ddbcd6138fbd
 RFCOMM_CHANNEL = 2
 class Android:
     def __init__(self):
