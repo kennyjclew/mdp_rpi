@@ -62,9 +62,9 @@ class Multithreading:
 
         self.allthreads = [self.r_arduino_thread, self.r_android_thread, self.r_pc_thread, self.w_thread, self.w_image_thread, self.w_updates_thread]
 
-        self.start_all_threads()
+        #self.start_all_threads()
 
-        self.checkconnections()
+        #self.checkconnections()
         
 
 
@@ -81,7 +81,8 @@ class Multithreading:
     def start_all_threads(self):
         for thread in self.allthreads:
             thread.start()
-
+        
+        self.checkconnections()
 
     def stop_all(self): #KIV: not sure where to call this method
         for thread in self.allthreads:
