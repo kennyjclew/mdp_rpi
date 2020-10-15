@@ -123,7 +123,7 @@ class ImageProcessingServer:
             
             # resize the frame to have a width of IMAGE_WIDTH pixels, then
             # grab the frame dimensions and construct a blob
-            print(frame)
+            # print(frame)
             frame = imutils.resize(frame, width=IMAGE_WIDTH)
             # cv2.imshow("",frame)
             # time.sleep(30)
