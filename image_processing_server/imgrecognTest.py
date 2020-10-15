@@ -70,7 +70,7 @@ def getArchitecture():
 #Load Architecture
 model = getArchitecture()
 #Load Model
-model.load_weights("C:/Users/bryna/OneDrive/Documents/GitHub/mdp_rpi/image_processing_server/model_new.h5") # CHANGE PATH
+model.load_weights("C:/Users/bryna/OneDrive/Documents/GitHub/mdp_rpi/image_processing_server/model.h5") # CHANGE PATH
 
 def resizeImage(image, width = None, height = None, inter = cv2.INTER_AREA):
     dim = None
@@ -155,8 +155,8 @@ def runAnalysis(img_path):
             target = crop[y:y+h, x:x+w] # crop out the bounding box image
             if (checkBrightness(target)<=30):
                 continue
-            filename = r'C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/processed images/target/' + dt.datetime.now().strftime("%Y%m%d-%H%M%S") + '.jpg' #CHANGE PATH
-            cv2.imwrite(filename, target)            
+            # filename = r'C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/processed images/target/' + dt.datetime.now().strftime("%Y%m%d-%H%M%S") + '.jpg' #CHANGE PATH
+            # cv2.imwrite(filename, target)            
             test = cv2.resize(target, (64, 64), interpolation=cv2.INTER_CUBIC)  # resize to normalize data size
             test = np.reshape(test, newshape=(-1, 64, 64,3))
             predictions.append(model.predict(test/255))
@@ -169,7 +169,7 @@ def runAnalysis(img_path):
     for pred in predictions:
             prob = np.max(pred, axis=1)
             classLabel = np.argmax(pred, axis=1)
-            if prob > 0.95 and prob > bestResults[1]:
+            if prob > 0.99 and prob > bestResults[1]:
                 bestResults[1] = prob
                 classLabel = np.argmax(pred, axis=1)
                 bestResults[0] = CATEGORIES[classLabel[0]]
