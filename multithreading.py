@@ -102,7 +102,7 @@ class Multithreading:
             #assumes that process dies when target dies?????
             arduinoalive = self.r_arduino_thread.is_alive()
             androidalive = self.r_android_thread.is_alive()
-            pcalive = self.r_android_thread.is_alive()
+            pcalive = self.r_pc_thread.is_alive()
 
             if (arduinoalive and androidalive and pcalive):
                 continue
