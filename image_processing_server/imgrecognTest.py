@@ -154,13 +154,13 @@ def runAnalysis(img_path):
             x, y, w, h = b
             target = crop[y:y+h, x:x+w] # crop out the bounding box image
             if (checkBrightness(target)<=30):
-                continue
-            filename = r'C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/processed images/target/' + dt.datetime.now().strftime("%Y%m%d-%H%M%S") + '.jpg' #CHANGE PATH
-            cv2.imwrite(filename, target)            
-            test = cv2.resize(target, (64, 64), interpolation=cv2.INTER_CUBIC)  # resize to normalize data size
-            test = np.reshape(test, newshape=(-1, 64, 64,3))
-            predictions.append(model.predict(test/255))
-            boxes.append(box)
+                #continue
+            # filename = r'C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/processed images/target/' + dt.datetime.now().strftime("%Y%m%d-%H%M%S") + '.jpg' #CHANGE PATH
+            # cv2.imwrite(filename, target)            
+                test = cv2.resize(target, (64, 64), interpolation=cv2.INTER_CUBIC)  # resize to normalize data size
+                test = np.reshape(test, newshape=(-1, 64, 64,3))
+                predictions.append(model.predict(test/255))
+                boxes.append(box)
             
     bestResults = [None, 0, None] # label, prob, box
     
@@ -169,7 +169,7 @@ def runAnalysis(img_path):
     for pred in predictions:
             prob = np.max(pred, axis=1)
             classLabel = np.argmax(pred, axis=1)
-            if prob > 0.95 and prob > bestResults[1]:
+            if prob > 0.97 and prob > bestResults[1]:
                 bestResults[1] = prob
                 classLabel = np.argmax(pred, axis=1)
                 bestResults[0] = CATEGORIES[classLabel[0]]
@@ -182,6 +182,8 @@ def runAnalysis(img_path):
 
     if bestResults[1] == 0:
         return 'No Matched Found'
+    else:
+        return bestResults[0]
     
     #Draw coutour to original image
     x, y, w, h = bestResults[2]
