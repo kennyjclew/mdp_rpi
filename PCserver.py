@@ -66,6 +66,12 @@ class PCserver:
             self.s = None
             print("rpi's pcserver socket closed")
 
+    def checkconnections(self):
+        if (self.conn is None) or (self.s is None):
+            return False
+        else:
+            return True
+
     #receive data from client
     def read(self):
         try:

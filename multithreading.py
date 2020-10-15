@@ -126,7 +126,7 @@ class Multithreading:
                         self.android.connect()  
                         self.r_android_thread = multiprocessing.Process(target=self.android_continuous_read, args=(self.msgqueue,))
                         self.r_android_thread.start()
-                    elif not pcalive:
+                    elif not (pcalive and self.pc.checkconnections()):
                         print("restarting connection with pc")
                         self.pc.disconnect()
                         self.r_pc_thread.terminate()
