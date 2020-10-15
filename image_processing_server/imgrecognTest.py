@@ -70,7 +70,7 @@ def getArchitecture():
 #Load Architecture
 model = getArchitecture()
 #Load Model
-model.load_weights("C:/Users/bryna/OneDrive/Documents/GitHub/mdp_rpi/image_processing_server/model_new.h5") # CHANGE PATH
+model.load_weights("C:/Users/bryna/OneDrive/Documents/GitHub/mdp_rpi/image_processing_server/model.h5") # CHANGE PATH
 
 def resizeImage(image, width = None, height = None, inter = cv2.INTER_AREA):
     dim = None

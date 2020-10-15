@@ -108,7 +108,7 @@ class ImageProcessingServer:
             # receive RPi name and frame from the RPi and acknowledge the receipt
             coord , frame = self.image_hub.recv_image() #coord in format y(row)|x(col)
 
-            print('Connected and received frame at time: ' + str(datetime.now()) + " at coordinate: " + coord)
+            print('\nConnected and received frame at time: ' + str(datetime.now()) + " at coordinate: " + coord)
             
             coordlist = coord.split("|")
             leftcoord = str("(" + coordlist[0] + " , " + coordlist[1] + ")")
@@ -127,7 +127,7 @@ class ImageProcessingServer:
             frame = imutils.resize(frame, width=IMAGE_WIDTH)
             # cv2.imshow("",frame)
             # time.sleep(30)
-            print(frame)
+            # print(frame)
             # return True
 
         #     if self._is_stopping_frame(frame):
@@ -155,8 +155,8 @@ class ImageProcessingServer:
             save_success = cv2.imwrite(baseurl + "/trainingimages/FULL" + datetimestring + ".jpg", frame)
             print('save', "test.jpg", 'successful?', save_success)
 
-            fullResult = imgrecognTest.runAnalysis(baseurl + "/trainingimages/FULL" + datetimestring + ".jpg")
-            print("\n fullResult: " + fullResult + " between " + leftcoord + " and " + rightcoord + "\n")
+            #fullResult = imgrecognTest.runAnalysis(baseurl + "/trainingimages/FULL" + datetimestring + ".jpg")
+            #print("\n fullResult: " + fullResult + " between " + leftcoord + " and " + rightcoord + "\n")
 
             test3tuple = cut_image(self, baseurl + "/trainingimages/FULL" + datetimestring + ".jpg", baseurl + "/SLICED_IMAGES/")
 
