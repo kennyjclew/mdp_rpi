@@ -104,6 +104,9 @@ class Multithreading:
             androidalive = self.r_android_thread.is_alive()
             pcalive = self.r_pc_thread.is_alive()
 
+            #print("client conn: " + str(self.pc.conn) + " client addr:  " + str(self.pc.addr))
+            #print("server: " + str(self.pc.s))
+
             if (arduinoalive and androidalive and pcalive):
                 continue
             else:
@@ -224,8 +227,10 @@ class Multithreading:
     #------IMAGE RECOGNITION METHODS------
     def take_picture(self, imgqueue):
         try:
-            rpicamera = PiCamera(resolution=(1920,1088))
-            rpicamera.hflip = True
+            #rpicamera = PiCamera(resolution=(1920,1088))
+            rpicamera = PiCamera()
+            rpicamera.resolution = (1920, 1088)
+            #rpicamera.hflip = True
             outputtype = PiRGBArray(rpicamera)
             #time.sleep(0.1) #camera may need to warm up? KIV
 

@@ -18,7 +18,7 @@ class PCserver:
         self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #AF_INET is internet address family for IPv4, SOCK_STREAM is socket type for TCP (protocol)
 
         #not sure if need to setsockopt yet. previous execution may result in "Address already in use" error
-        #s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
         #bind socket to specific network interface and port number. IPv4 expects a 2-tuple
         self.s.bind((HOST_IP, PORT))
