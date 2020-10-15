@@ -29,11 +29,21 @@ class PCserver:
     def connect(self):
         connected = False
         while not connected:
-            print("trying to connect to pc...")
-            self.conn, self.addr = self.s.accept() #gets client socket object conn
-            if (self.conn and self.addr) is not None:
-                print("connected to pc!")
-                connected = True
+            try:
+                print("trying to connect to pc...")
+                self.conn, self.addr = self.s.accept() #gets client socket object conn
+                if (self.conn and self.addr) is not None:
+                    print("connected to pc!")
+                    connected = True
+            except Exception as error:
+                print("connection to pc failed: " + str(error))
+
+                if self.conn is not None:
+                    print("closing pc client socket...")
+                    self.conn.close()
+                    self.conn = None
+                    self.addr = None
+
 
 
     #close client socket

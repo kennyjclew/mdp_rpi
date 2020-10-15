@@ -3,26 +3,30 @@ import time
 
 class Arduino:
     #information about Arduino
-    def init(self):
+    def __init__(self):
         # self.serial_port = "/dev/ttyUSB0"
         self.serial_port = '/dev/ttyACM0'
         self.baud_rate = 115200
         self.connection = None
 
     def connect(self):
-        print('Connecting to Arduino...')
-        try:
-            self.connection = serial.Serial('/dev/ttyACM0', 115200)
-            if self.connection is not None: # It is connected to at least 1 of the Arduino
-                print('Connection with Arduino ' + self.connection.name + ' SUCCESSFUL')
-            time.sleep(2)
-        except Exception as error:
-            print('Connection with Arduino FAILED')
-            print('Try to reconnect with Arduino')
-            self.disconnect()
-            time.sleep(5)
-            self.connect()
+        connected = False
+        while not connected:
+            try:
+                print('Connecting to Arduino...')
 
+                if self.connection is None:
+                    self.connection = serial.Serial(self.serial_port, self.baud_rate)
+                #if self.connection is not None, exception will be thrown
+
+                #after attempting to connect, we double check if it is connected
+                if self.connection is not None: # It is connected to at least 1 of the Arduino
+                    print('Connection with Arduino ' + self.connection.name + ' SUCCESSFUL')
+                    connected = True
+
+            except Exception as error:
+                print('Connection with Arduino FAILED: ' + str(error))
+                
     def disconnect(self):
         if self.connection is not None:
                 self.connection.close()

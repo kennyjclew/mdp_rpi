@@ -119,4 +119,5 @@ class Android:
 
         except Exception as error:	
             print('Android write failed: ' + str(error))
-            raise error
+            #multithreading will handle the error by stopping the thread, getting reconnection
+            raise error 
