@@ -65,6 +65,12 @@ class Multithreading:
         #self.start_all_threads()
 
         #self.checkconnections()
+
+        #set up camera settings
+        self.rpicamera = PiCamera()
+        self.rpicamera.resolution = (1920, 1088)
+        self.rpicamera.hflip = True
+        self.outputtype = PiRGBArray(self.rpicamera)
         
 
 
@@ -95,6 +101,9 @@ class Multithreading:
         self.arduino.disconnect()
         self.android.disconnect_all()
         self.pc.disconnect_both()
+
+        #close picamera
+        self.rpicamera.close()
         
 
     def checkconnections(self):
@@ -228,16 +237,11 @@ class Multithreading:
     def take_picture(self, imgqueue):
         try:
             #rpicamera = PiCamera(resolution=(1920,1088))
-            rpicamera = PiCamera()
-            rpicamera.resolution = (1920, 1088)
-            #rpicamera.hflip = True
-            outputtype = PiRGBArray(rpicamera)
             #time.sleep(0.1) #camera may need to warm up? KIV
 
-            rpicamera.capture(outputtype, format="bgr")
-            imgtaken = outputtype.array
+            self.rpicamera.capture(self.outputtype, format="bgr")
+            imgtaken = self.outputtype.array
             print("Image taken")
-            rpicamera.close()
 
             # to gather training images
             # os.system("raspistill -o images/test"+
