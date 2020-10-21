@@ -47,6 +47,9 @@ class Multithreading:
         self.imgqueue = multiprocessing.Queue()
             #each object in queue is a list [coord, img]
         self.w_image_thread = multiprocessing.Process(target=self.write_to_imgserver, args=(self.imgqueue, self.msgqueue, ))
+
+        #self.rpicamera = PiCamera(resolution=(1920,1088))
+        #self.rpicamera.hflip = True
         #------END IMG RECOGNITION DECLARATIONS
 
 
@@ -65,6 +68,8 @@ class Multithreading:
         #self.start_all_threads()
 
         #self.checkconnections()
+
+        
         
 
 
@@ -95,6 +100,8 @@ class Multithreading:
         self.arduino.disconnect()
         self.android.disconnect_all()
         self.pc.disconnect_both()
+
+        self.rpicamera.close()
         
 
     def checkconnections(self):
@@ -198,7 +205,7 @@ class Multithreading:
                         updatesqueue.put([ANDROID_HEADER, msg[2:]])
                     elif msg[:2] == PCToRPi.TAKE_PICTURE:
                         print("pc tells rpi to take picture")
-                        img = self.take_picture(imgqueue)
+                        img = self.take_picture()
                         imgqueue.put([msg[3:], img])
                     elif msg == PCToRPi.EXPLORATION_DONE:
                         #KIV: RPI DO SOMETHING. display all images recognised?
@@ -225,19 +232,20 @@ class Multithreading:
                 
 
     #------IMAGE RECOGNITION METHODS------
-    def take_picture(self, imgqueue):
+    def take_picture(self):
         try:
-            #rpicamera = PiCamera(resolution=(1920,1088))
-            rpicamera = PiCamera()
-            rpicamera.resolution = (1920, 1088)
-            #rpicamera.hflip = True
+            print("starting to take pic")
+            rpicamera = PiCamera(resolution=(640,480))
+            rpicamera.hflip = True
             outputtype = PiRGBArray(rpicamera)
             #time.sleep(0.1) #camera may need to warm up? KIV
+            print("outputtype set: " + outputtype)
 
             rpicamera.capture(outputtype, format="bgr")
+            print("capture complete: " + outputtype)
             imgtaken = outputtype.array
             print("Image taken")
-            rpicamera.close()
+            
 
             # to gather training images
             # os.system("raspistill -o images/test"+

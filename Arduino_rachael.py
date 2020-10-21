@@ -34,7 +34,7 @@ class Arduino:
 
     def write(self, message):
         try:
-            #print('To Arduino:' + message)
+            print('To Arduino:' + message)
             self.connection.write(message.encode())
         except Exception as error:
             print('Write to Arduino FAILED. Error Message: ' + str(error))
