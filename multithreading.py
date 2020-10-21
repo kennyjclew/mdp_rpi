@@ -101,7 +101,7 @@ class Multithreading:
         self.android.disconnect_all()
         self.pc.disconnect_both()
 
-        self.rpicamera.close()
+        #self.rpicamera.close()
         
 
     def checkconnections(self):
@@ -246,6 +246,7 @@ class Multithreading:
             imgtaken = outputtype.array
             print("Image taken")
             
+            rpicamera.close()
 
             # to gather training images
             # os.system("raspistill -o images/test"+
