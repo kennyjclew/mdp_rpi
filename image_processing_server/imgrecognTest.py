@@ -203,7 +203,7 @@ def runAnalysis(img_path):
         
         # save that beautiful picture
         imgs_comb = Image.fromarray( imgs_comb)
-        imgs_comb.save('C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/processed images/stitchImage.JPG')  # CHANGE PATH
-        # imgs_comb.save('stitchImage.JPG')
+        #imgs_comb.save('C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/processed images/stitchImage.JPG')  # CHANGE PATH
+        imgs_comb.save('stitchImage.JPG')
 
         return bestResults[0]
