@@ -161,13 +161,16 @@ class ImageProcessingServer:
             test3tuple = cut_image(self, baseurl + "/trainingimages/FULL" + datetimestring + ".jpg", baseurl + "/SLICED_IMAGES/")
 
             leftResult = imgrecognTest.runAnalysis(baseurl + "/SLICED_IMAGES/" + test3tuple[0])
-            print("\n LeftResult: " + leftResult + " at " + leftcoord + "\n")
+            if leftResult is not None:
+                print("\n LeftResult: " + leftResult + " at " + leftcoord + "\n")
 
             middleResult = imgrecognTest.runAnalysis(baseurl + "/SLICED_IMAGES/" + test3tuple[1])
-            print("\n middleResult: " + middleResult + " at " + middlecoord + "\n")
+            if middleResult is not None:
+                print("\n middleResult: " + middleResult + " at " + middlecoord + "\n")
             
             rightResult = imgrecognTest.runAnalysis(baseurl + "/SLICED_IMAGES/" + test3tuple[2])
-            print("\n rightResult: " + rightResult + " at " + rightcoord + "\n")
+            if rightResult is not None:
+                print("\n rightResult: " + rightResult + " at " + rightcoord + "\n")
             
             #if leftResult is not None:
 
