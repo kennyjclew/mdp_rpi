@@ -47,6 +47,9 @@ class Multithreading:
         self.imgqueue = multiprocessing.Queue()
             #each object in queue is a list [coord, img]
         self.w_image_thread = multiprocessing.Process(target=self.write_to_imgserver, args=(self.imgqueue, self.msgqueue, ))
+
+        #self.rpicamera = PiCamera(resolution=(1920,1088))
+        #self.rpicamera.hflip = True
         #------END IMG RECOGNITION DECLARATIONS
 
 
@@ -66,8 +69,7 @@ class Multithreading:
 
         #self.checkconnections()
 
-        self.rpicamera = PiCamera(resolution=(1920,1088))
-        self.rpicamera.hflip = True
+        
         
 
 
@@ -203,7 +205,7 @@ class Multithreading:
                         updatesqueue.put([ANDROID_HEADER, msg[2:]])
                     elif msg[:2] == PCToRPi.TAKE_PICTURE:
                         print("pc tells rpi to take picture")
-                        img = self.take_picture(imgqueue)
+                        img = self.take_picture()
                         imgqueue.put([msg[3:], img])
                     elif msg == PCToRPi.EXPLORATION_DONE:
                         #KIV: RPI DO SOMETHING. display all images recognised?
@@ -230,14 +232,16 @@ class Multithreading:
                 
 
     #------IMAGE RECOGNITION METHODS------
-    def take_picture(self, imgqueue):
+    def take_picture(self):
         try:
             print("starting to take pic")
-            outputtype = PiRGBArray(self.rpicamera)
+            rpicamera = PiCamera(resolution=(640,480))
+            rpicamera.hflip = True
+            outputtype = PiRGBArray(rpicamera)
             #time.sleep(0.1) #camera may need to warm up? KIV
             print("outputtype set: " + outputtype)
 
-            self.rpicamera.capture(outputtype, format="bgr")
+            rpicamera.capture(outputtype, format="bgr")
             print("capture complete: " + outputtype)
             imgtaken = outputtype.array
             print("Image taken")
