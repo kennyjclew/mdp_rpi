@@ -34,21 +34,21 @@ class ImageProcessingServer:
         
         # # initialize the ImageHub object
         self.image_hub = imagezmq.CustomImageHub()
-        CATEGORIES  = {'White Arrow': 1,
-                        'Blue Arrow': 2,
-                        'Yellow Arrow': 3,
-                        'Red Arrow': 4,
-                        'Circle': 5,
-                        '6': 6,
-                        '7': 7, 
-                        '8': 8,
-                        '9': 9,
-                        '0': 10, 
-                        'V': 11, 
-                        'W': 12,
-                        'X': 13, 
-                        'Y': 14,  
-                        'Z': 15}
+        self.CATEGORIES  = {'White Arrow': "1",
+                        'Blue Arrow': "2",
+                        'Yellow Arrow': "3",
+                        'Red Arrow': "4",
+                        'Circle': "5",
+                        '6': "6",
+                        '7': "7", 
+                        '8': "8",
+                        '9': "9",
+                        '0': "10", 
+                        'V': "11", 
+                        'W': "12",
+                        'X': "13", 
+                        'Y': "14",  
+                        'Z': "15"}
 
     def start(self):
         print('\nStarted image processing server.\n')
@@ -81,41 +81,48 @@ class ImageProcessingServer:
 
             test3tuple = cut_image(self, baseurl + "/trainingimages/FULL" + datetimestring + ".jpg", baseurl + "/SLICED_IMAGES/")
 
+            leftCoordResult = ""
+            middleCoordResult = ""
+            rightCoordResult = ""
+            
+            
+
             leftResult = imgrecognTest.runAnalysis(baseurl + "/SLICED_IMAGES/" + test3tuple[0])
             if leftResult is not None:
                 print("\n LeftResult: " + leftResult + " at " + leftcoord + "\n")
-                self.image_hub.send_reply('"image":{' + CATEGORIES[leftResult] + "," + coordlist[0] + "," + coordlist[1] + "}")
+                leftCoordResult = (""'image":{' + self.CATEGORIES[leftResult] + "," + coordlist[0] + "," + coordlist[1] + "}")
 
             middleResult = imgrecognTest.runAnalysis(baseurl + "/SLICED_IMAGES/" + test3tuple[1])
             if middleResult is not None:
                 print("\n middleResult: " + middleResult + " at " + middlecoord + "\n")
-                self.image_hub.send_reply('"image":{' + CATEGORIES[middleResult] + "," + coordlist[2] + "," + coordlist[3] + "}")
+                middleCoordResult = ('"image":{' + self.CATEGORIES[middleResult] + "," + coordlist[2] + "," + coordlist[3] + "}")
             
             rightResult = imgrecognTest.runAnalysis(baseurl + "/SLICED_IMAGES/" + test3tuple[2])
             if rightResult is not None:
                 print("\n rightResult: " + rightResult + " at " + rightcoord + "\n")
-                self.image_hub.send_reply('"image":{' + CATEGORIES[rightResult] + "," + coordlist[4] + "," + coordlist[5] + "}")
+                rightCoordResult = ('"image":{' + self.CATEGORIES[rightResult] + "," + coordlist[4] + "," + coordlist[5] + "}")
  
+            self.image_hub.send_reply(leftCoordResult + "|" + middleCoordResult + "|" + rightCoordResult)
 
-    #FOR IMAGE SLICING
-    def cut_image(self, img_path, save_path): 
-        # Read the image
-        img = imageio.imread(img_path)
-        height, width, _ = img.shape
-        # print(img.shape)
+#FOR IMAGE SLICING
+def cut_image(self, img_path, save_path): 
+    # Read the image
+    img = imageio.imread(img_path)
+    height, width, _ = img.shape
+    # print(img.shape)
 
-        # Cut the image in half
-        width_cutoff = width // 3
-        s1 = img[:, :width_cutoff]
-        s2 = img[:,width_cutoff: width_cutoff*2]
-        s3 = img[:, width_cutoff*2:]
-        #s3 = img[width_cutoff*2:,:]
+    # Cut the image in half
+    width_cutoff = width // 3
+    s1 = img[:, :width_cutoff]
+    s2 = img[:,width_cutoff: width_cutoff*2]
+    s3 = img[:, width_cutoff*2:]
+    #s3 = img[width_cutoff*2:,:]
 
-        datetimestring = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+    datetimestring = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 
-        # Save each half
-        imageio.imsave(save_path+ datetimestring + "_face1.jpg", s1)
-        imageio.imsave(save_path+ datetimestring + "_face2.jpg", s2)
-        imageio.imsave(save_path+ datetimestring + "_face3.jpg", s3)
+    # Save each half
+    imageio.imsave(save_path+ datetimestring + "_face1.jpg", s1)
+    imageio.imsave(save_path+ datetimestring + "_face2.jpg", s2)
+    imageio.imsave(save_path+ datetimestring + "_face3.jpg", s3)
 
-        return (datetimestring+"_face1.jpg", datetimestring+"_face2.jpg", datetimestring+"_face3.jpg")
+    return (datetimestring+"_face1.jpg", datetimestring+"_face2.jpg", datetimestring+"_face3.jpg")
