@@ -267,6 +267,9 @@ class Multithreading:
                 imgserverreply = image_sender.send_image(imgwcoord[0], imgwcoord[1]) 
                 #assume server will reply with 1. img detected, 2. coordinates 
                 if imgserverreply is not None:
-                    print("WRITING IMAGE TO ANDROID: " + imgserverreply)
-                    # msgqueue.put([ANDROID_HEADER, imgserverreply])
+                    print("WRITING IMAGES TO ANDROID: " + imgserverreply)
+                    img_list = imgserverreply.splitlines("|")
+                    for img in img_list:
+                        print("ADDING IMAGE TO ANDROID QUEUE: " + img)
+                        self.updatesqueue.put([ANDROID_HEADER, img])
                 print("image recognition complete")
