@@ -236,6 +236,7 @@ class Multithreading:
         try:
             print("starting to take pic")
             rpicamera = PiCamera(resolution=(640,480))
+            rpicamera.start_preview() #try this?
             rpicamera.hflip = True
             outputtype = PiRGBArray(rpicamera)
             #time.sleep(0.1) #camera may need to warm up? KIV
@@ -266,6 +267,6 @@ class Multithreading:
                 imgwcoord = imgqueue.get()
                 imgserverreply = image_sender.send_image(imgwcoord[0], imgwcoord[1]) 
                 #assume server will reply with 1. img detected, 2. coordinates 
-                # if imgserverreply is not None:
-                #     msgqueue.put([ANDROID_HEADER, imgserverreply])
+                if imgserverreply is not None:
+                    msgqueue.put([ANDROID_HEADER, imgserverreply])
                 print("image recognition complete")
