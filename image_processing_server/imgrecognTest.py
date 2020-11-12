@@ -96,10 +96,10 @@ def getBoundingBox(contours):
     # sort size in descending order
     for contour in sorted(contours, key=cv2.contourArea, reverse=True):
         area = cv2.contourArea(contour)
-        print(area) # Comment
-        if area < 660: # area of img is too small, skip #TBC
+        #print(area) # Comment
+        if area < 600: # area of img is too small, skip #TBC
             break
-        elif area > 10000: # area of img is too big, skip #TBC
+        elif area > 5000: # area of img is too big, skip #TBC
             continue
         rect = cv2.boundingRect(contour)
         x, y, w, h = rect
@@ -135,6 +135,20 @@ def checkBrightness(target):
     avg_maxval = round(sum(maxval) / len(maxval))
     return avg_maxval
 
+def checkColor(target,result): #CHANGE -- ADD THIS METHOD
+    img = resizeImage(target, height = 900)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    
+    mean_blue = np.mean(img[:,:,2])
+    mean_green = np.mean(img[:,:,1])
+    mean_red = np.mean(img[:,:,0])
+    if(result == "Circle"):
+        if(mean_green - mean_blue> 15 and mean_green - mean_red> 15 ):
+            return True
+        else:
+            return False
+    return True
+
 
 def runAnalysis(img_path):
     img = cv2.imread(img_path)
@@ -162,7 +176,7 @@ def runAnalysis(img_path):
             boxes.append(b)
 
     if len(predictions) == 0:
-        return print('No Prediction Made')
+        return None
             
     bestResults = [None, 0, None] # label, prob, box
     
@@ -171,7 +185,7 @@ def runAnalysis(img_path):
     for pred in predictions:
             prob = np.max(pred, axis=1)
             classLabel = np.argmax(pred, axis=1)
-            if prob > 0.99 and prob > bestResults[1]:
+            if prob > 0.9999 and prob > bestResults[1]:
                 bestResults[1] = prob
                 classLabel = np.argmax(pred, axis=1)
                 bestResults[0] = CATEGORIES[classLabel[0]]
@@ -183,10 +197,12 @@ def runAnalysis(img_path):
     #print(bestResults[1],bestResults[0])
 
     if bestResults[0] == None:
-        return print('No Matched Found')
+        return None
     else:
         #Draw coutour to original image
         x, y, w, h = bestResults[2]
+        if(checkColor(crop[y:y+h, x:x+w],bestResults[0])  == False): # CHANGE -- ADD THIS N NEXT LINE
+            return None
         y = y+100
         cv2.rectangle(img,(x,y),(x+w,y+h),(0,255,0),1)
         text = "{}".format(bestResults[0].upper())
@@ -195,15 +211,39 @@ def runAnalysis(img_path):
         cv2.imwrite(filename, img)
 
         #Stitch Img    
-        list_im = glob.glob("C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/processed images/*.JPG") # CHANGE PATH
-        imgs = [Image.open(i) for i in list_im]
-        # pick the image which is the smallest, and resize the others to match it (can be arbitrary image shape here)
-        min_shape = sorted( [(np.sum(i.size), i.size ) for i in imgs])[0][1]
-        imgs_comb = np.hstack((np.asarray(i.resize(min_shape)) for i in imgs))
+        # list_im = glob.glob("C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/processed images/*.JPG") # CHANGE PATH
+        # imgs = [Image.open(i) for i in list_im]
+        # # pick the image which is the smallest, and resize the others to match it (can be arbitrary image shape here)
+        # min_shape = sorted( [(np.sum(i.size), i.size ) for i in imgs])[0][1]
+        # imgs_comb = np.hstack((np.asarray(i.resize(min_shape)) for i in imgs))
         
-        # save that beautiful picture
-        imgs_comb = Image.fromarray( imgs_comb)
-        #imgs_comb.save('C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/processed images/stitchImage.JPG')  # CHANGE PATH
-        imgs_comb.save('stitchImage.JPG')
+        # # save that beautiful picture
+        # imgs_comb = Image.fromarray( imgs_comb)
+        # #imgs_comb.save('C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/processed images/stitchImage.JPG')  # CHANGE PATH
+        # imgs_comb.save('stitchImage.JPG')
 
         return bestResults[0]
+
+def stitchAllImage():
+    list_im = glob.glob("C:/Users/bryna/Documents/UNIVERSITY/YEAR 3/SEM 1/Multidisciplinary Project/RPi/img recognition/server test/processed images/*.JPG")
+    regList = []
+    for iName in list_im:
+        ToAppend = True
+        for l in regList:
+            if(iName.split('\\')[1].split('_')[0] == l) :
+                ToAppend = False
+        if(ToAppend):
+            regList.append(iName.split('\\')[1].split('_')[0])
+    ToStitch = []
+    for r in regList:
+        for l in list_im:
+            if(l.split('\\')[1].split('_')[0] == r):
+                ToStitch.append(l)
+                break
+    imgs = [Image.open(i) for i in ToStitch]
+    min_shape = sorted( [(np.sum(i.size), i.size ) for i in imgs])[0][1]
+    imgs_comb = np.hstack(imgs)
+    imgs_comb = Image.fromarray( imgs_comb)
+    imgs_comb.save('stitchImage.JPG')
+
+        
