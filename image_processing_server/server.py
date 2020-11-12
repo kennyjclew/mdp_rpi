@@ -11,7 +11,7 @@ import imutils
 import numpy as np
 # import tensorflow as tf
 
-from config import *
+# from config import *
 from image_receiver import custom_imagezmq as imagezmq
 import time
 import imgrecognTest
@@ -67,7 +67,7 @@ class ImageProcessingServer:
             rightcoord = str("(" + coordlist[4] + " , " + coordlist[5] + ")")
             print("left: " + leftcoord + "; middle: " + middlecoord + "; right: " + rightcoord)
 
-            frame = imutils.resize(frame, width=IMAGE_WIDTH)
+            frame = imutils.resize(frame, width=640)
             
             datetimestring = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 
